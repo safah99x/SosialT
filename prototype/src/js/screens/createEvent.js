@@ -38,11 +38,6 @@ export function renderCreateEvent(container) {
   title.textContent = "What's the plan?";
   screen.appendChild(title);
 
-  const sub = document.createElement('p');
-  sub.className = 'editorial-subtitle';
-  sub.textContent = 'Slower this time. More on purpose.';
-  screen.appendChild(sub);
-
   screen.appendChild(createInputField('Sunday brunch at mine'));
 
   // ── Optional photo ──
