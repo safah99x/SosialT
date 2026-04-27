@@ -1,18 +1,17 @@
 /**
  * Create Event screen.
  *
- * Three timing modes:
- *   1. "I'm flexible" — host doesn't commit to a date/time. Friends know it's a
- *      general invite and can suggest dates in the chat.
- *   2. "Pick dates"   — host commits to a specific date/time (inline date picker).
- *   3. "Poll"         — host proposes 2+ options; friends vote in chat.
+ * Three timing modes (segmented pill, in this order, left-to-right):
+ *   1. "Choose date/time" — host commits to a specific date/time (inline date
+ *      picker). Default mode.
+ *   2. "I'm flexible"     — host doesn't commit to a date/time. Friends know
+ *      it's an open invite and can suggest dates in the chat.
+ *   3. "Create a poll"    — host proposes 2+ options; friends vote in chat.
  *
  * UX choices:
- * - The mode toggle is a 3-segment pill. Order is intentional: most casual
- *   commitment on the left, most specific on the right.
- * - WHERE is only shown in "I'm flexible" and "Pick dates" modes. In poll mode
- *   each option carries its own location, so a global location field conflicts.
- * - CTA verb adapts: "Float it" (flexible), "Make it official" (dates), "Send poll".
+ * - WHERE is shown in "Choose date/time" and "I'm flexible" modes. In poll
+ *   mode each option carries its own location, so a global field is hidden.
+ * - CTA verb adapts: "Make it official" (date), "Float it" (flex), "Send poll".
  * - Successful create routes to the event chat (the conversation is the event;
  *   users go straight from confirmation into the thread).
  */
@@ -69,9 +68,9 @@ export function renderCreateEvent(container) {
 
   const segmented = createSegmented({
     options: [
+      { id: 'date', label: 'Choose date/time' },
       { id: 'flex', label: "I'm flexible" },
-      { id: 'date', label: 'Pick dates' },
-      { id: 'poll', label: 'Poll' },
+      { id: 'poll', label: 'Create a poll' },
     ],
     active: 'date',
     onChange: (id) => switchMode(id),

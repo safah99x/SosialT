@@ -578,17 +578,18 @@ Layout: TopBar → profile card → grouped lists (`Account`, `Privacy`) → `Si
 
 The host has three ways to set timing for an event. The WHEN section opens with a 3-pill segmented toggle:
 
-1. **I'm flexible** — no date locked in. Friends know it's an open invite and can suggest dates in the chat.
-2. **Pick dates** — host commits to a single date/time (uses the inline date picker). Default mode.
-3. **Poll** — host proposes 2+ date/time/location options. Friends vote in the chat.
+1. **Choose date/time** — host commits to a single date/time (uses the inline date picker). Default mode.
+2. **I'm flexible** — no date locked in. Friends know it's an open invite and can suggest dates in the chat.
+3. **Create a poll** — host proposes 2+ date/time/location options. Friends vote in the chat.
 
-Pill order is intentional: most casual on the left, most specific on the right.
+Pill order is intentional and matches the original product screenshot: the most committed option lives on the left because it is the default.
 
 Rules:
 - The mode is a **segmented pill toggle** (`.segmented`) at the top of the WHEN section.
-- The default mode is `Pick dates`.
-- CTA verb adapts: `Float it` (flexible), `Make it official` (dates), `Send poll` (poll).
-- In `Poll` mode the standalone `WHERE` card is hidden because each option carries its own location. In `I'm flexible` and `Pick dates` modes WHERE is shown.
+- The default mode is `Choose date/time`.
+- CTA verb adapts: `Make it official` (date), `Float it` (flex), `Send poll` (poll).
+- In `Create a poll` mode the standalone `WHERE` card is hidden because each option carries its own location. In `Choose date/time` and `I'm flexible` modes WHERE is shown.
+- The segmented buttons render labels in a single line (`white-space: nowrap`, 13px) so all three pills fit a 360px-wide screen without wrapping.
 - `I'm flexible` mode renders a single tonal card with copy:
   > No date locked in.
   > Friends will know it's an open invite. You can pin a date in the chat once people are in.

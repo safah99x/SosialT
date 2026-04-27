@@ -1425,13 +1425,16 @@
 }
 .segmented__btn {
   flex: 1;
-  padding: 10px 16px;
+  padding: 10px 8px;
   font-family: var(--font-body);
-  font-size: var(--fs-chip);
+  font-size: 13px;
   font-weight: var(--fw-medium);
   color: var(--color-text-secondary);
   background: transparent;
   border-radius: var(--radius-pill);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   transition: all var(--duration-normal) var(--ease-out);
 }
 .segmented__btn--active {
