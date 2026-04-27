@@ -43,13 +43,6 @@ export const renderCircles = (c) => renderPlaceholder(c, {
   hint: 'Coffee Crew, Inner Circle, Late Night Crew. Manage them here.',
 });
 
-export const renderChats = (c) => renderPlaceholder(c, {
-  tab: 'chats',
-  title: 'Chats',
-  line: 'Words, not feeds.',
-  hint: 'Side-conversations for the plans you care about.',
-});
-
 export const renderNotifications = (c) => renderPlaceholder(c, {
   tab: 'home',
   title: 'Notifications',

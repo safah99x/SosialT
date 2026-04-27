@@ -1,16 +1,18 @@
 /**
- * Simple hash-based SPA router.
- * Supports parametric routes for /event/:id.
+ * Hash-based SPA router.
+ * Supports parametric routes (/event/:id, /event/:id/chat) and query strings
+ * after a '?' (e.g. #/event/coffee-meetup/chat?new=1).
  */
 import { renderHome } from './screens/home.js';
 import { renderQuickPing } from './screens/quickPing.js';
 import { renderCreateEvent } from './screens/createEvent.js';
 import { renderSuccess } from './screens/success.js';
 import { renderEventDetail } from './screens/eventDetail.js';
+import { renderEventChat } from './screens/eventChat.js';
+import { renderChats } from './screens/chats.js';
 import {
   renderEvents,
   renderCircles,
-  renderChats,
   renderNotifications,
   renderProfile,
 } from './screens/placeholder.js';
@@ -19,13 +21,19 @@ const staticRoutes = {
   '/':                  (c) => renderHome(c),
   '/quick-ping':        (c) => renderQuickPing(c),
   '/create-event':      (c) => renderCreateEvent(c),
-  '/quick-ping/sent':   (c) => renderSuccess(c, {
+  '/quick-ping/sent':   (c, params) => renderSuccess(c, {
     title: 'Sent',
     subtitle: 'Your people will see it in a sec.',
+    next: params.get('next') || '#/',
+    ctaLabel: 'Back to home',
   }),
-  '/create-event/done': (c) => renderSuccess(c, {
-    title: "It's on the calendar",
-    subtitle: 'Your circle will see it in a moment.',
+  '/create-event/done': (c, params) => renderSuccess(c, {
+    title: params.get('mode') === 'poll' ? 'Poll sent' : "It's on the calendar",
+    subtitle: params.get('mode') === 'poll'
+      ? 'Friends can vote in the chat.'
+      : 'Your circle will see it in a moment.',
+    next: params.get('next') || '#/',
+    ctaLabel: 'Open chat',
   }),
   '/events':            (c) => renderEvents(c),
   '/circles':           (c) => renderCircles(c),
@@ -34,19 +42,31 @@ const staticRoutes = {
   '/profile':           (c) => renderProfile(c),
 };
 
-function resolve(hash) {
-  if (staticRoutes[hash]) return staticRoutes[hash];
-  const eventMatch = hash.match(/^\/event\/([\w-]+)$/);
-  if (eventMatch) return (c) => renderEventDetail(c, { id: eventMatch[1] });
-  return staticRoutes['/'];
+function parseHash() {
+  const raw = window.location.hash.replace(/^#/, '') || '/';
+  const [path, query = ''] = raw.split('?');
+  return { path, params: new URLSearchParams(query) };
+}
+
+function resolve({ path, params }) {
+  if (staticRoutes[path]) return (c) => staticRoutes[path](c, params);
+
+  const chat = path.match(/^\/event\/([\w-]+)\/chat$/);
+  if (chat) return (c) => renderEventChat(c, { id: chat[1], params });
+
+  const detail = path.match(/^\/event\/([\w-]+)$/);
+  if (detail) return (c) => renderEventDetail(c, { id: detail[1] });
+
+  return (c) => renderHome(c);
 }
 
 export function initRouter(container) {
   function navigate() {
-    const hash = window.location.hash.replace('#', '') || '/';
-    const render = resolve(hash);
-    // Remove any persisting overlays / floating nav from the previous screen.
-    document.querySelectorAll('.bottom-nav, .create-sheet').forEach((n) => n.remove());
+    const parsed = parseHash();
+    const render = resolve(parsed);
+    document
+      .querySelectorAll('.bottom-nav, .create-sheet, .invite-sheet, .invite-sheet-backdrop, .circle-modal, .circle-modal-backdrop, .chat-popover')
+      .forEach((n) => n.remove());
     render(container);
     container.scrollTop = 0;
   }

@@ -540,6 +540,101 @@ Honest stand-ins so every nav button leads somewhere meaningful.
 
 ---
 
+## 8b. Poll-first Create Event flow
+
+The host has two ways to set timing for an event:
+
+1. **Pick a time** — host commits to a single date/time (uses the inline date picker).
+2. **Create a poll** — host proposes 2+ date/time/location options. Friends vote in the chat.
+
+Rules:
+- The mode is a **segmented pill toggle** (`.segmented`) at the top of the WHEN section.
+- The default mode is `Pick a time`.
+- The CTA verb changes by mode: `Make it official` (date) or `Send poll` (poll).
+- In `Create a poll` mode the standalone `WHERE` card is hidden because each option carries its own location.
+- Each poll option must accept: start date, optional end date, start time, optional end time, location.
+- Required minimum is 2 options. The "Add another option" button appears at the end of the list.
+- The helper text under the list always reads:
+  > Don't worry, friends can suggest changes in the chat.
+- After creation, route is:
+  `#/create-event/done?mode={date|poll}&next=#/event/:id/chat?{new=1|poll=1}`
+  The success screen auto-advances into the event chat after ~1.8s.
+
+Component file: `prototype/src/js/components/pollBuilder.js`.
+
+---
+
+## 8c. Event Chat & Invite Flow
+
+Each event owns a **chat thread** under `/event/:id/chat`. The thread combines:
+- A day separator pill (centered, pale).
+- A muted system note (e.g. `You shared an event with the group`).
+- An inline shared **event card** (`.chat-event-card`) — tap to open the full detail.
+- For poll-created events, an inline **poll card** (`.chat-poll-card`) with progress bars and a vote count line.
+- Self bubbles use the warm gradient (`#FBE48F → #F2C94C`); other-people bubbles use a clean cream.
+- A composer with an input + a circular gradient send button.
+
+The chat header surfaces:
+- Back button.
+- A 36px circle thumbnail of the event image.
+- Event title + small caps `EVENT . {group}` line.
+- A 3-dot menu that opens a popover with `Event details` and `Add new friend`.
+
+### Invite Friends sheet
+
+Triggered from the popover (`Add new friend`) or from the event detail `Invite` chip. Mounts above the current screen so context isn't lost.
+
+Layout:
+- Drag handle.
+- Title: `Select friends to invite`.
+- Horizontal scroller of avatars with names below; first item is `Add new friend` (dashed circle).
+- Selected friends show a green check overlay.
+- Sticky CTA: `Invite friends` (disabled when 0 selected); becomes `Invite N friend(s)` when selected.
+
+### Add to circle modal
+
+After confirming the invite, a small centered modal appears:
+> Add them to the same circle?
+> Quietly group your invitees so future plans pre-fill faster.
+
+Buttons: `Not now` (ghost) / `Save` (warm gradient).
+
+Either action closes the modal and the sheet, then drops a system message back into the chat:
+> You added N friends.
+
+Components:
+- `prototype/src/js/screens/inviteFriends.js`
+- `prototype/src/js/screens/eventChat.js`
+
+---
+
+## 8d. Event Detail attendee tabs
+
+Below the meta block, the event detail surfaces a `Friends` section with a small `+ Invite` chip and a horizontal pill toggle:
+
+```
+[ All N ] [ Going N ] [ Not going N ] [ Maybe N ]
+```
+
+Each list row shows: avatar circle, name (with optional `host` pill), RSVP label colored by status:
+- Going → `--color-success` green
+- Not going → muted red `#B05656`
+- Maybe → `--color-accent-strong`
+
+The CTA row at the bottom is three buttons: primary `I'm in`, square `Open chat` (routes to `/event/:id/chat`), square `Share`.
+
+`Show on map` link opens Google Maps in a new tab using the event place string.
+
+---
+
+## 8e. Chats list
+
+Route `/chats` shows one row per event thread. Each row: 48px event-image avatar, title + relative time, last-message preview prefixed by sender name, unread badge or chevron.
+
+Component: `prototype/src/js/screens/chats.js`.
+
+---
+
 ## 9. Acceptance checklist (run before shipping any screen)
 
 Copy
@@ -569,6 +664,10 @@ Navigation
 - [ ] Top bar: bell → `/notifications`, calendar → `/events`, avatar → `/profile`.
 - [ ] Upcoming rows and Around-you cards open `/event/:id`.
 - [ ] Quick Ping and Create Event share spacing, rhythm, and components.
+- [ ] Create Event has a working `Pick a time` / `Create a poll` segmented toggle and the WHERE card hides in poll mode.
+- [ ] After publishing, success screen auto-advances into `/event/:id/chat`.
+- [ ] Event chat has a 3-dot menu with `Event details` and `Add new friend`.
+- [ ] Invite sheet shows selected count in the CTA and offers the `Add to circle` modal afterwards.
 
 ---
 

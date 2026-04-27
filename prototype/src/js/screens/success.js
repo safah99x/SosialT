@@ -1,8 +1,10 @@
 /**
- * Success / confirmation screen — used after sending a Quick Ping
- * or creating an Event. Auto-returns to Home after a moment.
+ * Success / confirmation screen.
+ * Shows for a brief beat then auto-routes — to home by default, or to the
+ * passed `next` route (used by Create Event to drop the host into the new
+ * event chat).
  */
-export function renderSuccess(container, { title, subtitle, ctaLabel = 'Back to home' } = {}) {
+export function renderSuccess(container, { title, subtitle, next = '#/', ctaLabel = 'Open chat' } = {}) {
   container.innerHTML = '';
   const screen = document.createElement('div');
   screen.className = 'screen success-screen';
@@ -22,14 +24,14 @@ export function renderSuccess(container, { title, subtitle, ctaLabel = 'Back to 
   `;
 
   screen.querySelector('#success-cta').addEventListener('click', () => {
-    window.location.hash = '#/';
+    window.location.hash = next;
   });
 
-  // Auto-return after 4s, but only if we are still on the success screen.
+  // Auto-advance after a beat, but only if the user is still on this screen.
   const startedAt = window.location.hash;
   const t = setTimeout(() => {
-    if (window.location.hash === startedAt) window.location.hash = '#/';
-  }, 4000);
+    if (window.location.hash === startedAt) window.location.hash = next;
+  }, 1800);
   window.addEventListener('hashchange', () => clearTimeout(t), { once: true });
 
   container.appendChild(screen);
