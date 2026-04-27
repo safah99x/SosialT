@@ -10,12 +10,10 @@ import { renderSuccess } from './screens/success.js';
 import { renderEventDetail } from './screens/eventDetail.js';
 import { renderEventChat } from './screens/eventChat.js';
 import { renderChats } from './screens/chats.js';
-import {
-  renderEvents,
-  renderCircles,
-  renderNotifications,
-  renderProfile,
-} from './screens/placeholder.js';
+import { renderEvents } from './screens/events.js';
+import { renderCircles } from './screens/circles.js';
+import { renderNotifications } from './screens/notifications.js';
+import { renderProfile } from './screens/profile.js';
 
 const staticRoutes = {
   '/':                  (c) => renderHome(c),

@@ -482,14 +482,48 @@ Opened when the user taps an Upcoming row or an Around-you card.
 - CTA row: `I'm in` (full-width gradient button) and a square share button (56×56) on the right.
 - Tapping `I'm in` snaps the button to the green success state, then navigates to the Quick Ping success screen after 600ms.
 
-### 7.20 Placeholder screens (Events / Circles / Chats / Notifications / You)
+### 7.20 List-screen header (Events / Circles / Notifications)
 
-Honest stand-ins so every nav button leads somewhere meaningful.
+Reusable header used by every secondary tab page. Mounted directly under the top bar.
 
-- Reuses the home top bar.
-- Centered block with a 32px Fraunces title, an 18px subtitle in the brand voice, and a 13px hint about what's coming next.
-- Single CTA `Back to home`.
-- Bottom nav stays mounted with the corresponding tab marked active.
+- Title: Fraunces 30px / -0.02em / line-height 1.05.
+- Subtitle: Plus Jakarta Sans 14px in `--color-text-secondary`.
+- Optional `+ New` chip on the right (warm accent gradient pill, 13px semibold) when the screen supports a primary creation action.
+- Below the header, an optional `.list-screen__filter` segmented control sits flush with the body grid.
+
+### 7.21 Events list screen
+
+Layout: TopBar → list header (`Events` / `Past, present, and the maybe-pile.`) → segmented filter (`Upcoming` / `Around you` / `Past`) → list of event rows → bottom nav (Events tab active).
+
+- Each row is a `grid-template-columns: 78px 1fr auto` card: 78px square image (14px radius), body (uppercase tag, Fraunces title, two icon meta lines), chevron.
+- Tapping a row routes to `#/event/:id`.
+- Empty state is a single tonal card with brand-voice copy ("Nothing in the rear-view yet." for past).
+- Data is sourced from the same `EVENTS` map used by Home + EventDetail. No fictional records.
+
+### 7.22 Circles list screen
+
+Layout: TopBar → list header with `+ New` chip → list of circle cards → bottom nav (Circles tab active).
+
+- Each circle card is `grid-template-columns: 60px 1fr auto`: 60px gradient avatar block (135deg, two brand tones, inset highlight) with a single glyph (◉ ✸ ☾ ✦), body (name + member count + last-activity line + avatar stack), chevron.
+- Avatar stack reuses the home `.avatar-stack` so the visual language is identical across screens.
+- `+ New` opens Create Event for now (prototype).
+
+### 7.23 Notifications screen
+
+Layout: TopBar → list header → grouped sections (`Today`, `Earlier`) → bottom nav (Home tab active).
+
+- Section title: 11px uppercase, letter-spacing 0.12em, muted.
+- Each row is `grid-template-columns: 36px 1fr`: 36px circular tinted icon (background `colorHex + 1A`, foreground `colorHex` — 4 kinds: rsvp, message, invite, circle), body with bold actor name + soft body + right-aligned relative time.
+- Tapping a row routes to the related event/chat/circle.
+
+### 7.24 Profile screen
+
+Layout: TopBar → profile card → grouped lists (`Account`, `Privacy`) → `Sign out` → bottom nav (Home tab active).
+
+- Profile card: 56px gradient avatar (warm accent → deep accent), Fraunces 22px name, 13px handle/city line, then a 3-up stat grid (`Events` / `Circles` / `Friends`). Stat tiles route to `#/events` and `#/circles` when tapped.
+- Section title: 11px uppercase muted, identical to Notifications grouping for consistency.
+- List rows: `grid-template-columns: 28px 1fr auto` (icon, label, chevron), 14px body type, 1px hairline separator (`rgba(0,0,0,0.04)`) between rows, no border on last row.
+- Sign-out button: full-width, transparent, semibold, `#B5524A` text. No background — the muted destructive treatment from the system.
 
 ---
 
@@ -509,7 +543,7 @@ Honest stand-ins so every nav button leads somewhere meaningful.
 2. Editorial title `What are you up to?`
 3. Subtitle `Round up your people. Now-ish.`
 4. Input field (default `Coffee at Tim Wendelboe`)
-5. WHEN section: chips `Now`, `In 30 min`, `Tonight`, `Choose time`
+5. WHEN section: chips `Now`, `In 30 min`, `Tonight`, `Choose time`. The `Choose time` chip opens the brand `timePicker` inside the `pickerSheet` overlay; once a time is picked, the chip's label snaps to the selected time (e.g. `19:00`) and stays selected. Native `<input type="time">` is never used here.
 6. WHERE section: location card with `Current location` secondary
 7. INVITE section
 8. CTA `Send it`
