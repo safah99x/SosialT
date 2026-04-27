@@ -10,7 +10,7 @@
  *   - Bottom nav (no tab active; Profile is reached from the top bar)
  */
 import { mountBottomNav } from '../components/bottomNav.js';
-import { createTopBar } from '../components/topBar.js';
+import { createHeader } from '../components/header.js';
 
 const USER = {
   name: 'Anders Solberg',
@@ -52,12 +52,7 @@ export function renderProfile(container) {
   const screen = document.createElement('div');
   screen.className = 'screen home-screen';
 
-  screen.appendChild(createTopBar({
-    initials: USER.initials,
-    onNotifications: () => { window.location.hash = '#/notifications'; },
-    onCalendar:      () => { window.location.hash = '#/events'; },
-    onProfile:       () => { window.location.hash = '#/profile'; },
-  }));
+  screen.appendChild(createHeader('You'));
 
   const card = document.createElement('section');
   card.className = 'profile-card';
@@ -119,6 +114,6 @@ export function renderProfile(container) {
     el.addEventListener('click', () => { window.location.hash = el.dataset.route; });
   });
 
-  mountBottomNav({ active: 'home' });
+  mountBottomNav({ active: null });
   container.appendChild(screen);
 }

@@ -252,6 +252,21 @@ Layout: `[ < ]   [ Title ]   [ spacer ]`
 - Back button 40×40, soft hover.
 - Title centered, 15px, semibold.
 - No divider line under it.
+- **Sticky.** `.app-header` is `position: sticky; top: 0; z-index: 20;` with a
+  blurred `var(--color-bg)` background, and bleeds edge-to-edge via negative
+  horizontal margins. The back affordance must remain visible no matter how
+  deep the user scrolls in any flow. Same rule applies to `.chat-header`.
+- **Click behaviour.** Back uses the shared `goBack(fallback)` helper from
+  `src/js/lib/nav.js`. It tries `window.history.back()` first (so the
+  browser's forward arrow keeps working), then falls back to the most
+  natural in-app destination (e.g. event chat -> event detail; deep links
+  -> `/`) if no SPA history entry exists. Never use raw `history.back()`
+  on its own — direct deep-links would leave the prototype.
+- **Back affordance is mandatory** on every non-tab screen. Tab screens
+  (Home, Events, Circles, Chats) never get a back button — bottom nav
+  handles cross-tab navigation. Notifications and Profile, although
+  reached *from* the home top bar, are not tabs and therefore must use
+  this header.
 
 ### 7.3 Greeting block (Home)
 
@@ -468,6 +483,14 @@ Shown after sending a Quick Ping or creating an Event.
 - Auto-returns to home after 4 seconds, but only if the hash hasn't changed.
 
 ### 7.19 Event detail screen
+
+The round backdrop-blur back chip uses the **sticky variant**
+(`.event-hero__back--sticky`). It is rendered as a direct child of
+`.event-detail` (not nested inside `.event-hero`) with
+`position: sticky; top: 12px;` and a `margin-bottom: -50px` so the hero
+image starts behind it. Result: the chip floats over the hero on entry
+and remains pinned at the top through the entire scroll — friends list,
+attendee tabs, CTA row.
 
 Opened when the user taps an Upcoming row or an Around-you card.
 

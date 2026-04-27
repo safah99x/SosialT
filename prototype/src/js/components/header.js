@@ -1,7 +1,14 @@
 /**
- * Header component — back arrow + screen title
+ * Sticky screen header — back arrow + screen title.
+ *
+ * Sticks to the top of the scroll container (see `.app-header` styles) so
+ * the back affordance stays visible no matter how deep the user is in the
+ * flow. The optional `fallback` is the route to use when there's no SPA
+ * history entry to pop (deep links, hard reloads).
  */
-export function createHeader(title, onBack) {
+import { goBack } from '../lib/nav.js';
+
+export function createHeader(title, onBack, fallback = '#/') {
   const header = document.createElement('header');
   header.className = 'app-header';
   header.innerHTML = `
@@ -16,9 +23,7 @@ export function createHeader(title, onBack) {
 
   header.querySelector('.header-back').addEventListener('click', () => {
     if (onBack) { onBack(); return; }
-    // Prefer real browser history so forward button stays meaningful.
-    if (window.history.length > 1) window.history.back();
-    else window.location.hash = '#/';
+    goBack(fallback);
   });
 
   return header;

@@ -16,6 +16,7 @@
  *   - "I'm in" toggles RSVP locally and shows a soft confirmation
  */
 import { mountInviteSheet } from './inviteFriends.js';
+import { goBack } from '../lib/nav.js';
 
 const EVENTS = {
   'coffee-meetup': {
@@ -125,7 +126,7 @@ export function renderEventDetail(container, { id }) {
       </header>
       <p class="editorial-subtitle">That event has gone for a walk. Try another.</p>
     `;
-    screen.querySelector('#eb').addEventListener('click', () => { window.history.back(); });
+    screen.querySelector('#eb').addEventListener('click', () => { goBack('#/events'); });
     container.appendChild(screen);
     return;
   }
@@ -139,10 +140,10 @@ export function renderEventDetail(container, { id }) {
   };
 
   screen.innerHTML = `
+    <button class="event-hero__back event-hero__back--sticky" id="event-back" aria-label="Back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
     <div class="event-hero" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.05) 40%, rgba(44,40,37,0.55) 100%), url('${event.image}')">
-      <button class="event-hero__back" id="event-back" aria-label="Back">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
       <span class="event-hero__tag">${event.tag}</span>
     </div>
 
@@ -218,8 +219,7 @@ export function renderEventDetail(container, { id }) {
   });
 
   screen.querySelector('#event-back').addEventListener('click', () => {
-    if (window.history.length > 1) window.history.back();
-    else window.location.hash = '#/';
+    goBack('#/events');
   });
 
   screen.querySelector('#event-chat').addEventListener('click', () => {

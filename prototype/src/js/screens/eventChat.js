@@ -19,6 +19,7 @@
  */
 import { getEvent } from './eventDetail.js';
 import { mountInviteSheet } from './inviteFriends.js';
+import { goBack } from '../lib/nav.js';
 
 const SEED_MESSAGES = [
   { from: 'self', kind: 'event-card' },
@@ -107,8 +108,7 @@ export function renderEventChat(container, { id, params } = {}) {
 
   // ── Header back ──
   screen.querySelector('#chat-back').addEventListener('click', () => {
-    if (window.history.length > 1) window.history.back();
-    else window.location.hash = '#/';
+    goBack(`#/event/${id}`);
   });
 
   // ── 3-dot menu ──

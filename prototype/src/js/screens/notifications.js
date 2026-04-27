@@ -9,7 +9,7 @@
  *   - Tapping a notification routes to the related event when relevant
  */
 import { mountBottomNav } from '../components/bottomNav.js';
-import { createTopBar } from '../components/topBar.js';
+import { createHeader } from '../components/header.js';
 
 const ITEMS = [
   {
@@ -56,17 +56,11 @@ export function renderNotifications(container) {
   const screen = document.createElement('div');
   screen.className = 'screen home-screen';
 
-  screen.appendChild(createTopBar({
-    initials: 'AS',
-    onNotifications: () => { window.location.hash = '#/notifications'; },
-    onCalendar:      () => { window.location.hash = '#/events'; },
-    onProfile:       () => { window.location.hash = '#/profile'; },
-  }));
+  screen.appendChild(createHeader('Notifications'));
 
   const head = document.createElement('header');
   head.className = 'list-screen__head';
   head.innerHTML = `
-    <h1 class="list-screen__title">Notifications</h1>
     <p class="list-screen__sub">Only the ones that matter. We promise.</p>
   `;
   screen.appendChild(head);
@@ -94,6 +88,6 @@ export function renderNotifications(container) {
     screen.appendChild(sec);
   });
 
-  mountBottomNav({ active: 'home' });
+  mountBottomNav({ active: null });
   container.appendChild(screen);
 }
