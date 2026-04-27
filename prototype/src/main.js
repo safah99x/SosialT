@@ -1,5 +1,5 @@
 /**
- * SocialT — App Entry Point
+ * SosialT — App Entry Point
  */
 import './styles/global.css';
 import './styles/components.css';

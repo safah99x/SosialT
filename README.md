@@ -1,4 +1,4 @@
-# SocialT
+# SosialT
 
 A small, calm social app for spending more time with friends in real life. Built for people aged 40 to 70 in Norway who want a warmer alternative to feeds.
 

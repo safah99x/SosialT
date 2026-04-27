@@ -1,11 +1,11 @@
 ---
-name: socialt-design
-description: SocialT mobile app design system — components, tokens, motion, copy rules. Use this any time you build, edit, or review SocialT screens.
+name: sosialt-design
+description: SosialT mobile app design system — components, tokens, motion, copy rules. Use this any time you build, edit, or review SosialT screens.
 ---
 
-# SocialT — Component Skill
+# SosialT — Component Skill
 
-This document is the single source of truth for the SocialT design system.
+This document is the single source of truth for the SosialT design system.
 You should be able to recreate every screen in the app from this file alone.
 
 The design language is **Atmospheric Hygge** — calm, warm, premium, Scandinavian, editorial, private, intentional. The product is for people aged 40–70 in Norway who want to spend more time with friends in real life, not scroll a feed.
@@ -85,7 +85,7 @@ The home hero also shows a context chip above the line:
 ### Chosen pairing (default)
 - **Display / Headings:** `Fraunces` — variable serif, warm and editorial with personality. Reads confidently for a 40–70 audience and supports the Hygge mood.
 - **Body / UI:** `Plus Jakarta Sans` — humanist sans, very legible at small sizes, friendly without being childish.
-- **Wordmark / Brand mark:** the existing brushy `SocialT` script (use as image/SVG only, never as a typed font).
+- **Wordmark / Brand mark:** the existing brushy `SosialT` script (use as image/SVG only, never as a typed font).
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -224,11 +224,11 @@ Every component below is mandatory. Each has structure, classes, behavior, and a
 
 ### 7.1 TopBar (home only)
 
-Layout: `[ SocialT wordmark ]   ⟶   [ bell ]  [ calendar ]  [ avatar ]`
+Layout: `[ SosialT wordmark ]   ⟶   [ bell ]  [ calendar ]  [ avatar ]`
 
 ```html
 <header class="top-bar">
-  <span class="top-bar__brand">SocialT</span>
+  <span class="top-bar__brand">SosialT</span>
   <div class="top-bar__actions">
     <button class="top-bar__icon" aria-label="Notifications">
       <svg>…bell with red dot…</svg>
@@ -240,7 +240,7 @@ Layout: `[ SocialT wordmark ]   ⟶   [ bell ]  [ calendar ]  [ avatar ]`
   </div>
 </header>
 ```
-- Wordmark uses the brushy SocialT script (italic-leaning serif fallback acceptable).
+- Wordmark uses the brushy SosialT script (italic-leaning serif fallback acceptable).
 - Avatar: 36px circle, warm cream background, charcoal initials, semibold.
 - Each icon button: 36px, soft cream background, charcoal icon. Bell has a 6px red dot when notifications exist.
 - Acceptance: never shows a back button on Home.

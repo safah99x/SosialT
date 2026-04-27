@@ -1,8 +1,8 @@
-# SocialT — Context
+# SosialT — Context
 
 ## Product Summary
 
-SocialT is an event-driven social app designed to help people spend more time together in real life, instead of passively scrolling through feeds.
+SosialT is an event-driven social app designed to help people spend more time together in real life, instead of passively scrolling through feeds.
 
 The product focuses on:
 - Quick spontaneous meetups through **Quick Pings**
@@ -16,7 +16,7 @@ The core experience should feel calm, warm, private, and intentional.
 
 ## Product Philosophy
 
-SocialT is not a traditional social media feed.
+SosialT is not a traditional social media feed.
 
 It should avoid:
 - Endless scrolling
@@ -24,7 +24,7 @@ It should avoid:
 - Noisy engagement mechanics
 - Algorithm-driven content addiction
 
-Instead, SocialT should encourage:
+Instead, SosialT should encourage:
 - Real-world action
 - Small group coordination
 - Low-pressure invitations
@@ -42,7 +42,7 @@ Not:
 
 ## Core Creation Flows
 
-SocialT has two closely related creation flows:
+SosialT has two closely related creation flows:
 
 1. **Quick Ping**
 2. **Create Event**
@@ -145,7 +145,7 @@ Primary CTA:
 
 > Send Quick Ping
 
-The button uses the SocialT warm micro-gradient style.
+The button uses the SosialT warm micro-gradient style.
 
 ---
 
@@ -369,7 +369,7 @@ The button must use the same style as the Quick Ping CTA:
 
 # Design System Summary
 
-SocialT uses a design language called:
+SosialT uses a design language called:
 
 > Atmospheric Hygge
 

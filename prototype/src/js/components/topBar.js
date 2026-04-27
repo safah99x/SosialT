@@ -7,7 +7,7 @@ export function createTopBar({ initials = 'AS', onNotifications, onCalendar, onP
   const bar = document.createElement('header');
   bar.className = 'top-bar';
   bar.innerHTML = `
-    <span class="top-bar__brand">SocialT</span>
+    <span class="top-bar__brand">SosialT</span>
     <div class="top-bar__actions">
       <button class="top-bar__icon" id="top-bar-bell" aria-label="Notifications">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

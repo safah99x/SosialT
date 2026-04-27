@@ -1,5 +1,5 @@
 /**
- * SocialT — Dynamic hero copy
+ * SosialT — Dynamic hero copy
  *
  * The hero line on the home screen rotates based on:
  *   - Time of day (morning / lunch / afternoon / evening / late)

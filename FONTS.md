@@ -1,6 +1,6 @@
-# SocialT — Type research & font choices
+# SosialT — Type research & font choices
 
-This doc explains why the chosen fonts were picked for SocialT and lists pre-approved alternatives if you want to swap later. Fonts are loaded in `prototype/src/styles/global.css` and consumed via tokens in `tokens.css`.
+This doc explains why the chosen fonts were picked for SosialT and lists pre-approved alternatives if you want to swap later. Fonts are loaded in `prototype/src/styles/global.css` and consumed via tokens in `tokens.css`.
 
 ---
 
@@ -28,7 +28,7 @@ Sources: NIH (How to design font size for older adults, 2022), MyFonts "Typograp
 |------|------|-----|
 | Display / Headings | **Fraunces** (variable serif) | Warm, editorial, has a soft personality without losing authority. Matches the "Atmospheric Hygge" mood. Variable axes mean we can tune optical size and weight. Reads confidently for older eyes thanks to generous proportions. |
 | Body / UI | **Plus Jakarta Sans** | Humanist sans with a tall x-height and open apertures. Friendly without being childish. Excellent at small sizes on iOS-class screens. Pairs cleanly with Fraunces. |
-| Brand wordmark | **Caveat** (display only) | Casual brushy script that emulates the existing SocialT logo until the final wordmark SVG is wired in. Used only for the brand mark, never for copy. |
+| Brand wordmark | **Caveat** (display only) | Casual brushy script that emulates the existing SosialT logo until the final wordmark SVG is wired in. Used only for the brand mark, never for copy. |
 
 These three are the entire active type system. Headings, sub-headings, hero copy, success titles, upcoming and nearby card titles use Fraunces. Everything else (buttons, inputs, chips, labels, body, captions) uses Plus Jakarta Sans.
 

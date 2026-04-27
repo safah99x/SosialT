@@ -1,5 +1,5 @@
 /* ============================================
-   SocialT — Atmospheric Hygge Design Tokens
+   SosialT — Atmospheric Hygge Design Tokens
    Source of truth: SKILL.md
    ============================================ */
 
@@ -39,7 +39,7 @@
   /* ── Typography ── */
   --font-heading: 'Fraunces', 'DM Serif Display', Georgia, serif;
   --font-body:    'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-brand:   'Caveat', 'Fraunces', cursive; /* SocialT wordmark fallback */
+  --font-brand:   'Caveat', 'Fraunces', cursive; /* SosialT wordmark fallback */
 
   --fs-hero:      32px;
   --fs-greeting:  26px;
