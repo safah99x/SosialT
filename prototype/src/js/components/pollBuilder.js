@@ -13,6 +13,7 @@
 import { createMiniCalendar } from './miniCalendar.js';
 import { createTimePicker } from './timePicker.js';
 import { mountPickerSheet } from './pickerSheet.js';
+import { mountLocationPicker } from './locationPicker.js';
 
 const NAMES = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
 const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -73,11 +74,16 @@ export function createPollBuilder({ onChange } = {}) {
       btn.addEventListener('click', () => openPicker(i, btn.dataset.field, btn.dataset.pick));
     });
 
-    const locInput = el.querySelector('[data-field="location"]');
-    if (locInput) {
-      locInput.addEventListener('input', () => {
-        state.options[i].location = locInput.value;
-        onChange && onChange(state.options);
+    const locBtn = el.querySelector('[data-pick="location"]');
+    if (locBtn) {
+      locBtn.addEventListener('click', () => {
+        mountLocationPicker({
+          initial: state.options[i].location ? { name: state.options[i].location, sub: '', kind: 'pin' } : null,
+          onPick: (place) => {
+            state.options[i].location = place.name;
+            render();
+          },
+        });
       });
     }
 
@@ -180,10 +186,10 @@ function optionTemplate(o, i) {
         </button>
       </div>
 
-      <label class="poll-field poll-field--location">
-        <span class="poll-field__label">${pinSvg()} Where</span>
-        <input type="text" data-field="location" value="${o.location}" placeholder="A place, a neighbourhood, or 'TBD'" />
-      </label>
+      <button type="button" class="poll-pickfield poll-pickfield--full" data-pick="location" data-field="location">
+        <span class="poll-pickfield__label">${pinSvg()} Where</span>
+        <span class="poll-pickfield__value ${o.location ? '' : 'is-placeholder'}">${o.location || 'Pick a place'}</span>
+      </button>
     </div>
   `;
 }

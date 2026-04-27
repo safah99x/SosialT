@@ -409,17 +409,81 @@ Approved title/subtitle pairs:
 
 ### 7.12 Location card
 
+Two states:
+
 ```
-[ icon ] Add location           ›
-         Search for a place
+EMPTY                              SELECTED
+[ icon ] Add location      ›       [ map ] Tim Wendelboe          Change
+         Search for a place                Grüners gate 1, Grünerløkka
 
 ⊙ Current location  /  At my place
 ```
-- Primary card: warm white surface with cream rounded icon tile (40×40), title + hint stacked.
-- Secondary: small inline action below, 13px muted.
-- Quick Ping default secondary = `Current location`.
-- Create Event default secondary = `At my place`.
-- Never use a map.
+
+- **Empty**: warm white surface with cream rounded icon tile (40×40),
+  title + hint stacked. Secondary chip below: `Current location`
+  (Quick Ping default) or `At my place` (Create Event default). Tapping
+  the secondary chip commits that default place directly without opening
+  the picker.
+- **Selected**: a brand-painted 56×56 mini map thumb (cream gradient with
+  faint streets and a gold drop pin) on the left, place name + sub-line,
+  `Change` affordance on the right. Tapping anywhere on the row reopens
+  the picker.
+- **Picker**: tapping the empty card opens the **Location Picker** sheet
+  described in §7.25 — never a native browser map / iframe.
+
+### 7.25 Location Picker (sheet)
+
+Brand-aligned, Google-Maps-meets-GCal vibes — but rendered entirely from
+SVG so it stays inside the cream / sage / taupe palette and never leaks
+system UI.
+
+```
+Where                                                    [×]
+[ search a place, address or neighbourhood          ]
+[ ⊙ Use current ] [ ⌂ At my place ] [ ◉ Drop a pin ]
+
+╭──────────────────────────────────────╮
+│  ░ tonal map: parks (sage)           │
+│   roads (taupe + cream halo)         │
+│   water (pale teal) + compass        │
+│              ◉ pin                   │
+│  [ Sentrum, Oslo                  ]  │
+│  [ Tap a suggestion or drag map   ]  │
+╰──────────────────────────────────────╯
+
+RECENT
+  ☕ Tim Wendelboe       Grüners gate 1, Grünerløkka . Recent  ›
+  ⛰ Frogner Park        Open-air, sculptures, picnic . Recent ›
+  ≋ Aker Brygge         Waterfront, dining, walks . Recent    ›
+
+SUGGESTED IN OSLO
+  🍽 Mathallen Oslo      Vulkan, food hall                     ›
+  ⛪ Operahuset          Bjørvika, walk on the roof            ›
+  ☕ Fuglen              Universitetsgata, Sentrum             ›
+
+[ Set as location ]
+```
+
+Rules:
+- Mounts in a **tall** picker-sheet variant (`.picker-overlay--tall`)
+  giving the map room to breathe (~200 px) plus a scrollable list.
+- The map is painted SVG (no Google / Mapbox / OSM tiles): tonal
+  rectangles for blocks, soft sage blobs for parks, pale teal for water,
+  warm taupe roads with a cream halo, a centre drop pin in the brand
+  gold, and a tiny compass dot in the corner. The pin animates with a
+  spring drop on first render.
+- Quick chips: `Use current` / `At my place` / `Drop a pin`. Tapping any
+  of them is a one-tap commit (selects + the parent screen reflects it).
+- Suggestions are curated for Oslo and stable across visits to keep the
+  prototype believable; each row uses a tinted icon avatar matching the
+  place type (`cafe` warm taupe, `park` sage, `water` cool blue,
+  `culture` desert tan, `food` rust, `home` warm sand).
+- The CTA `Set as location` lives at the bottom, full-width, gold
+  gradient. Closing without committing leaves the parent untouched.
+- Used in three places: Quick Ping `WHERE`, Create Event `WHERE`
+  (date / flex modes), and each Poll-option `Where` field — with the
+  poll field rendered as a tappable `poll-pickfield` (never a free-text
+  input, to keep the warm visual identity intact).
 
 ### 7.13 Invite section
 

@@ -1611,6 +1611,7 @@
   width: 100%;
 }
 .poll-field--location { grid-column: 1 / -1; }
+.poll-pickfield--full { margin-top: 8px; }
 
 /* Branded pick-field button. Replaces native date/time inputs. */
 .poll-pickfield {
@@ -3223,4 +3224,310 @@
   margin-bottom: 100px;
 }
 .profile-signout:hover { opacity: 0.8; }
+
+/* ============================================================
+   Location Picker
+   Tonal, illustrative map + search + curated suggestion list.
+   Lives in a tall picker-sheet variant so it can breathe.
+   ============================================================ */
+
+.picker-overlay--tall .picker-sheet {
+  width: min(100% - 24px, 360px);
+  max-height: calc(100% - 40px);
+  height: calc(100% - 40px);
+}
+
+.loc-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 6px;
+}
+
+.loc-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--color-surface-warm);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(44, 40, 37, 0.06);
+  transition: border-color var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out);
+}
+.loc-search:focus-within {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+  box-shadow: 0 0 0 3px var(--color-accent-bg);
+}
+.loc-search__icon { color: var(--color-text-muted); flex-shrink: 0; }
+.loc-search__input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text);
+  font-weight: var(--fw-medium);
+  min-width: 0;
+}
+.loc-search__input::placeholder { color: var(--color-text-placeholder); }
+.loc-search__clear {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(44, 40, 37, 0.08);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.loc-search__clear:hover { background: rgba(44, 40, 37, 0.16); }
+
+.loc-quick {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.loc-quick::-webkit-scrollbar { display: none; }
+
+.loc-quick__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--color-surface-warm);
+  border: 1px solid rgba(44, 40, 37, 0.06);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+  white-space: nowrap;
+  transition: transform var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out);
+}
+.loc-quick__chip:hover {
+  background: var(--color-surface);
+  transform: translateY(-1px);
+}
+.loc-quick__chip:active { transform: scale(0.97); }
+.loc-quick__chip svg { color: var(--color-text-secondary); }
+
+.loc-map {
+  position: relative;
+  height: 200px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(44, 40, 37, 0.06);
+}
+.loc-map__art {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.loc-map__pin {
+  transform-origin: 0 18px;
+  animation: locPinDrop 600ms var(--ease-spring) both;
+}
+@keyframes locPinDrop {
+  0%   { transform: translate(180px, 80px) scale(0.6); opacity: 0; }
+  60%  { transform: translate(180px, 122px) scale(1.05); opacity: 1; }
+  100% { transform: translate(180px, 118px) scale(1); opacity: 1; }
+}
+.loc-map__readout {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 10px 14px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 4px 14px rgba(44, 40, 37, 0.08);
+}
+.loc-map__readout-name {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+.loc-map__readout-sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: var(--fw-medium);
+}
+
+.loc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.loc-list__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.loc-list__head {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 0 4px 4px;
+}
+
+.loc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.loc-row:hover { background: var(--color-surface-hover); }
+.loc-row--selected {
+  background: var(--color-accent-bg);
+  box-shadow: inset 0 0 0 1px var(--color-accent-soft);
+}
+.loc-row__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-surface-warm);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.loc-row__icon--current { background: #EAF1E8; color: #5C8E6F; }
+.loc-row__icon--home    { background: #F5E6D7; color: #B98C5E; }
+.loc-row__icon--cafe    { background: #F2EAD7; color: #B98C5E; }
+.loc-row__icon--park    { background: #E2EBDC; color: #6B8B6F; }
+.loc-row__icon--food    { background: #F4E3D6; color: #B5754D; }
+.loc-row__icon--water   { background: #DEE6E8; color: #5E7C8B; }
+.loc-row__icon--culture { background: #EFE4D6; color: #8A6E4B; }
+.loc-row__icon--pin     { background: var(--color-accent-bg); color: var(--color-accent-strong); }
+
+.loc-row__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.loc-row__name {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.loc-row__sub {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.loc-row__chev { color: var(--color-text-placeholder); flex-shrink: 0; }
+
+/* ── Selected state for the inline location card ── */
+.location-card__selected {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px solid rgba(44, 40, 37, 0.06);
+  border-radius: var(--radius-lg);
+  text-align: left;
+  box-shadow: var(--shadow-subtle);
+  transition: background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+.location-card__selected:hover {
+  background: var(--color-surface-warm);
+  transform: translateY(-1px);
+}
+.location-card__thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at 60% 70%, #FBF5E0 0%, transparent 60%),
+    linear-gradient(135deg, #F5EFE5 0%, #EFE6D7 100%);
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(44, 40, 37, 0.06);
+}
+.location-card__thumb::before,
+.location-card__thumb::after {
+  content: '';
+  position: absolute;
+  background: #C9B999;
+  opacity: 0.35;
+  border-radius: 1px;
+}
+.location-card__thumb::before {
+  top: 24px; left: -4px; right: -4px; height: 2px;
+}
+.location-card__thumb::after {
+  left: 28px; top: -4px; bottom: -4px; width: 2px;
+}
+.location-card__thumb-pin {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -75%);
+  background: var(--gradient-cta);
+  border: 1.4px solid #A6822B;
+  border-radius: 50% 50% 50% 0;
+  rotate: -45deg;
+  box-shadow: 0 2px 4px rgba(44, 40, 37, 0.18);
+}
+.location-card__thumb-pin::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--color-bg);
+  border-radius: 50%;
+}
+.location-card__edit {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-accent-strong);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+/* When the picker is mounted in the tall variant, push search/sticky area
+   so the body scrolls under but search stays put. */
+.picker-overlay--tall .picker-sheet__body {
+  padding: 4px 14px 14px;
+}
 

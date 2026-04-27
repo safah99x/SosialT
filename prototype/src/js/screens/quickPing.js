@@ -31,11 +31,6 @@ export function renderQuickPing(container) {
   title.textContent = 'What are you up to?';
   screen.appendChild(title);
 
-  const subtitle = document.createElement('p');
-  subtitle.className = 'editorial-subtitle';
-  subtitle.textContent = 'Round up your people. Now-ish.';
-  screen.appendChild(subtitle);
-
   screen.appendChild(createInputField('Coffee at Tim Wendelboe'));
 
   const whenSection = document.createElement('div');
