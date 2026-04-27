@@ -542,25 +542,35 @@ Honest stand-ins so every nav button leads somewhere meaningful.
 
 ## 8b. Poll-first Create Event flow
 
-The host has two ways to set timing for an event:
+The host has three ways to set timing for an event. The WHEN section opens with a 3-pill segmented toggle:
 
-1. **Pick a time** — host commits to a single date/time (uses the inline date picker).
-2. **Create a poll** — host proposes 2+ date/time/location options. Friends vote in the chat.
+1. **I'm flexible** — no date locked in. Friends know it's an open invite and can suggest dates in the chat.
+2. **Pick dates** — host commits to a single date/time (uses the inline date picker). Default mode.
+3. **Poll** — host proposes 2+ date/time/location options. Friends vote in the chat.
+
+Pill order is intentional: most casual on the left, most specific on the right.
 
 Rules:
 - The mode is a **segmented pill toggle** (`.segmented`) at the top of the WHEN section.
-- The default mode is `Pick a time`.
-- The CTA verb changes by mode: `Make it official` (date) or `Send poll` (poll).
-- In `Create a poll` mode the standalone `WHERE` card is hidden because each option carries its own location.
-- Each poll option must accept: start date, optional end date, start time, optional end time, location.
-- Required minimum is 2 options. The "Add another option" button appears at the end of the list.
-- The helper text under the list always reads:
+- The default mode is `Pick dates`.
+- CTA verb adapts: `Float it` (flexible), `Make it official` (dates), `Send poll` (poll).
+- In `Poll` mode the standalone `WHERE` card is hidden because each option carries its own location. In `I'm flexible` and `Pick dates` modes WHERE is shown.
+- `I'm flexible` mode renders a single tonal card with copy:
+  > No date locked in.
+  > Friends will know it's an open invite. You can pin a date in the chat once people are in.
+- Each poll option must accept: start date, optional end date, start time, optional end time, location. Date and time fields use the brand-styled `miniCalendar` and `timePicker` (never native `<input type="date|time">`). Minimum 2 options.
+- The helper text under the poll list always reads:
   > Don't worry, friends can suggest changes in the chat.
 - After creation, route is:
-  `#/create-event/done?mode={date|poll}&next=#/event/:id/chat?{new=1|poll=1}`
+  `#/create-event/done?mode={flex|date|poll}&next=#/event/:id/chat?{flex=1|new=1|poll=1}`
   The success screen auto-advances into the event chat after ~1.8s.
+- In the chat, `flex=1` events render with an `OPEN INVITE` tag and meta line `Date TBD . {place}` instead of date/time/place.
 
-Component file: `prototype/src/js/components/pollBuilder.js`.
+Component files:
+- `prototype/src/js/components/pollBuilder.js`
+- `prototype/src/js/components/miniCalendar.js`
+- `prototype/src/js/components/timePicker.js`
+- `prototype/src/js/components/pickerSheet.js`
 
 ---
 

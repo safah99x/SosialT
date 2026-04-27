@@ -27,14 +27,25 @@ const staticRoutes = {
     next: params.get('next') || '#/',
     ctaLabel: 'Back to home',
   }),
-  '/create-event/done': (c, params) => renderSuccess(c, {
-    title: params.get('mode') === 'poll' ? 'Poll sent' : "It's on the calendar",
-    subtitle: params.get('mode') === 'poll'
-      ? 'Friends can vote in the chat.'
-      : 'Your circle will see it in a moment.',
-    next: params.get('next') || '#/',
-    ctaLabel: 'Open chat',
-  }),
+  '/create-event/done': (c, params) => {
+    const mode = params.get('mode');
+    const titleByMode = {
+      poll: 'Poll sent',
+      flex: 'Floated to the group',
+      date: "It's on the calendar",
+    };
+    const subByMode = {
+      poll: 'Friends can vote in the chat.',
+      flex: 'Friends will chime in with dates.',
+      date: 'Your circle will see it in a moment.',
+    };
+    return renderSuccess(c, {
+      title: titleByMode[mode] || titleByMode.date,
+      subtitle: subByMode[mode] || subByMode.date,
+      next: params.get('next') || '#/',
+      ctaLabel: 'Open chat',
+    });
+  },
   '/events':            (c) => renderEvents(c),
   '/circles':           (c) => renderCircles(c),
   '/chats':             (c) => renderChats(c),

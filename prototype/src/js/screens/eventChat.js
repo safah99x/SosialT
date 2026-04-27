@@ -35,6 +35,13 @@ const POLL_MESSAGES = [
   { from: 'leo',  kind: 'text', body: 'Sunday morning works better, but Saturday if it has to be.' },
 ];
 
+const FLEX_MESSAGES = [
+  { from: 'self', kind: 'event-card', flex: true },
+  { from: 'self', kind: 'text', body: "Open invite. When works for you?" },
+  { from: 'maya', kind: 'text', body: 'Most weekends, honestly.' },
+  { from: 'leo',  kind: 'text', body: "I'm in. Tell me when." },
+];
+
 const PEOPLE = {
   self: { name: 'You',    color: '#E8C547' },
   maya: { name: 'Maya',   color: '#C49E7A' },
@@ -45,7 +52,8 @@ const PEOPLE = {
 export function renderEventChat(container, { id, params } = {}) {
   const event = getEvent(id) || getEvent('coffee-meetup');
   const isPoll = params.has('poll');
-  const isFresh = params.has('new') || params.has('poll');
+  const isFlex = params.has('flex');
+  const isFresh = params.has('new') || params.has('poll') || params.has('flex');
 
   container.innerHTML = '';
 
@@ -89,7 +97,7 @@ export function renderEventChat(container, { id, params } = {}) {
   `;
 
   const thread = screen.querySelector('#chat-thread');
-  const messages = isPoll ? POLL_MESSAGES : SEED_MESSAGES;
+  const messages = isPoll ? POLL_MESSAGES : isFlex ? FLEX_MESSAGES : SEED_MESSAGES;
   thread.appendChild(renderDaySeparator(today()));
   thread.appendChild(renderSystemMessage('You shared an event with the group'));
   messages.forEach((m) => thread.appendChild(renderMessage(m, event)));
@@ -170,7 +178,7 @@ function renderSystemMessage(text) {
 }
 
 function renderMessage(m, event) {
-  if (m.kind === 'event-card') return renderEventCard(event);
+  if (m.kind === 'event-card') return renderEventCard(event, { flex: m.flex });
   if (m.kind === 'poll-card')  return renderPollCard(event);
 
   const row = document.createElement('div');
@@ -192,16 +200,19 @@ function renderMessage(m, event) {
   return row;
 }
 
-function renderEventCard(event) {
+function renderEventCard(event, { flex = false } = {}) {
   const wrap = document.createElement('button');
   wrap.className = 'chat-event-card';
   wrap.type = 'button';
+  const meta = flex
+    ? `Date TBD . ${event.place}`
+    : `${event.date} . ${event.time} . ${event.place}`;
   wrap.innerHTML = `
     <span class="chat-event-card__image" style="background-image:url('${event.image}')"></span>
     <span class="chat-event-card__body">
-      <span class="chat-event-card__tag">Event</span>
+      <span class="chat-event-card__tag">${flex ? 'Open invite' : 'Event'}</span>
       <span class="chat-event-card__title">${event.title}</span>
-      <span class="chat-event-card__meta">${event.date} . ${event.time} . ${event.place}</span>
+      <span class="chat-event-card__meta">${meta}</span>
     </span>
     <svg class="chat-event-card__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   `;

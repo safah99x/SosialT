@@ -1,19 +1,20 @@
 /**
  * Create Event screen.
  *
- * Two timing modes:
- *   1. "Pick a time" — host commits to a specific date/time (uses inline date picker).
- *   2. "Create a poll" — host proposes 2+ options; friends vote in chat.
+ * Three timing modes:
+ *   1. "I'm flexible" — host doesn't commit to a date/time. Friends know it's a
+ *      general invite and can suggest dates in the chat.
+ *   2. "Pick dates"   — host commits to a specific date/time (inline date picker).
+ *   3. "Poll"         — host proposes 2+ options; friends vote in chat.
  *
  * UX choices:
- * - The mode toggle is a segmented pill, the most discoverable pattern for a
- *   binary-but-distinct choice.
- * - WHERE is only shown in "Pick a time" mode. In poll mode each option carries
- *   its own location, so a global location field would just create a conflict.
- * - The CTA stays warm and confident: "Make it official" for date, "Send poll"
- *   for poll. The verb tells you what's about to happen.
+ * - The mode toggle is a 3-segment pill. Order is intentional: most casual
+ *   commitment on the left, most specific on the right.
+ * - WHERE is only shown in "I'm flexible" and "Pick dates" modes. In poll mode
+ *   each option carries its own location, so a global location field conflicts.
+ * - CTA verb adapts: "Float it" (flexible), "Make it official" (dates), "Send poll".
  * - Successful create routes to the event chat (the conversation is the event;
- *   per the design notes, users go straight from confirmation into the thread).
+ *   users go straight from confirmation into the thread).
  */
 import { createHeader } from '../components/header.js';
 import { createInputField } from '../components/inputField.js';
@@ -68,8 +69,9 @@ export function renderCreateEvent(container) {
 
   const segmented = createSegmented({
     options: [
-      { id: 'date', label: 'Pick a time' },
-      { id: 'poll', label: 'Create a poll' },
+      { id: 'flex', label: "I'm flexible" },
+      { id: 'date', label: 'Pick dates' },
+      { id: 'poll', label: 'Poll' },
     ],
     active: 'date',
     onChange: (id) => switchMode(id),
@@ -77,6 +79,25 @@ export function renderCreateEvent(container) {
   whenSection.appendChild(segmented);
 
   // Mode-specific panels.
+  const flexPanel = document.createElement('div');
+  flexPanel.className = 'flex-panel';
+  flexPanel.innerHTML = `
+    <div class="flex-panel__card">
+      <span class="flex-panel__icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12C3 8 6 5 10 5C13 5 14 6.5 15 8C16 9.5 17 11 19 11C21 11 21.5 9.5 21.5 8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M3 18C3 14 6 11 10 11C13 11 14 12.5 15 14C16 15.5 17 17 19 17C21 17 21.5 15.5 21.5 14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <div class="flex-panel__body">
+        <p class="flex-panel__title">No date locked in.</p>
+        <p class="flex-panel__sub">Friends will know it's an open invite. You can pin a date in the chat once people are in.</p>
+      </div>
+    </div>
+  `;
+  flexPanel.hidden = true;
+  whenSection.appendChild(flexPanel);
+
   const datePanel = document.createElement('div');
   datePanel.className = 'date-panel date-panel--open';
   datePanel.appendChild(createDatePicker({ onChange: () => {} }));
@@ -107,7 +128,8 @@ export function renderCreateEvent(container) {
   const cta = createCTAButton('Make it official', () => {
     setTimeout(() => {
       const id = 'coffee-meetup'; // prototype: route to known thread.
-      const next = encodeURIComponent(`#/event/${id}/chat?${mode === 'poll' ? 'poll=1' : 'new=1'}`);
+      const flag = mode === 'poll' ? 'poll=1' : mode === 'flex' ? 'flex=1' : 'new=1';
+      const next = encodeURIComponent(`#/event/${id}/chat?${flag}`);
       window.location.hash = `#/create-event/done?mode=${mode}&next=${next}`;
     }, 200);
   });
@@ -116,17 +138,13 @@ export function renderCreateEvent(container) {
 
   function switchMode(id) {
     mode = id;
-    if (id === 'poll') {
-      datePanel.hidden = true;
-      pollPanel.hidden = false;
-      whereSection.style.display = 'none';
-      cta.textContent = 'Send poll';
-    } else {
-      datePanel.hidden = false;
-      pollPanel.hidden = true;
-      whereSection.style.display = '';
-      cta.textContent = 'Make it official';
-    }
+    flexPanel.hidden = id !== 'flex';
+    datePanel.hidden = id !== 'date';
+    pollPanel.hidden = id !== 'poll';
+    whereSection.style.display = id === 'poll' ? 'none' : '';
+    cta.textContent = id === 'poll' ? 'Send poll'
+      : id === 'flex' ? 'Float it'
+      : 'Make it official';
   }
 
   // ── Photo demo behavior ──

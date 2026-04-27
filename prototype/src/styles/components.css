@@ -1435,6 +1435,48 @@
 }
 
 /* ============================================
+   Flexible-date panel ("I'm flexible" mode)
+   ============================================ */
+.flex-panel {
+  animation: pollOptionIn 320ms var(--ease-spring);
+}
+.flex-panel__card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--color-surface-warm);
+  border-radius: var(--radius-xl);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-subtle);
+}
+.flex-panel__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-accent-bg);
+  color: var(--color-accent-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.flex-panel__body { display: flex; flex-direction: column; gap: 4px; }
+.flex-panel__title {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.flex-panel__sub {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================
    Poll Builder
    ============================================ */
 .poll-builder {
