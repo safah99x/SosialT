@@ -1,0 +1,197 @@
+/**
+ * Public listing engagement — three primary actions only:
+ * Plan with friends · Join on your own · Save to calendar (ICS).
+ * Bottom bar on detail (Calendar + Share) swaps to Chat + Share only after
+ * a private plan exists (see `eventDetail.js` mountPublicEventBottom).
+ * Preference capture uses thumbs up/down for feed tuning (not event rating).
+ */
+import {
+  getPublicEventState,
+  setSoloGoing,
+  clearPublicEventState,
+  getPreference,
+  setPreference,
+} from '../lib/publicEventState.js';
+import { openSaveToCalendarSheet, downloadICSForEvents } from '../lib/calendarExport.js';
+
+const ICON_PLAN = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="3.5" stroke="currentColor" stroke-width="1.8"/><circle cx="16" cy="13" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M3 20C3 17 5.5 14.5 9 14.5C10.5 14.5 11.8 14.9 12.8 15.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+const ICON_SOLO = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12Z" stroke="currentColor" stroke-width="1.8"/><path d="M4 20C4 16.5 7.5 14 12 14C16.5 14 20 16.5 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+const ICON_SAVE = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 21L12 16L5 21V5C5 3.9 5.9 3 7 3H17C18.1 3 19 3.9 19 5V21Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+const ICON_EDIT = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function toast(screen, msg) {
+  const t = document.createElement('div');
+  t.className = 'sosialt-toast';
+  t.textContent = msg;
+  screen.appendChild(t);
+  setTimeout(() => t.classList.add('sosialt-toast--out'), 1600);
+  setTimeout(() => t.remove(), 2000);
+}
+
+function preferenceBlock(event, id, screen) {
+  const current = getPreference(id);
+  const tagPhrase = event.tag ? ` · e.g. <strong>${event.tag}</strong>` : '';
+  const wrap = document.createElement('div');
+  wrap.className = 'public-engage__pref public-engage__pref--thumbs';
+  wrap.innerHTML = `
+    <div class="public-engage__pref-copy">
+      <p class="public-engage__pref-title">Better suggestions?</p>
+      <p class="public-engage__pref-lede">Shapes what shows under <strong>Around you</strong>${tagPhrase}. Guests don't see your taps.</p>
+    </div>
+    <div class="public-engage__pref-thumbs" role="group" aria-label="Tune Around-you suggestions">
+      <button type="button" class="public-engage__thumb public-engage__thumb--up ${current === 'like' ? 'public-engage__thumb--on' : ''}" data-pref="like" aria-pressed="${current === 'like' ? 'true' : 'false'}">
+        <span class="public-engage__thumb-icon public-engage__thumb-icon--solid" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+        </span>
+        <span class="public-engage__thumb-label">More like this</span>
+      </button>
+      <button type="button" class="public-engage__thumb public-engage__thumb--down ${current === 'dislike' ? 'public-engage__thumb--on' : ''}" data-pref="dislike" aria-pressed="${current === 'dislike' ? 'true' : 'false'}">
+        <span class="public-engage__thumb-icon public-engage__thumb-icon--solid" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.58-6.59c.37-.36.59-.86.59-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>
+        </span>
+        <span class="public-engage__thumb-label">Less like this</span>
+      </button>
+    </div>
+    <p class="public-engage__pref-foot">Tap again on the same thumb to clear.</p>
+  `;
+
+  wrap.querySelectorAll('[data-pref]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.pref;
+      const already = getPreference(id) === next;
+      setPreference(id, already ? null : next);
+      wrap.querySelectorAll('[data-pref]').forEach((b) => {
+        b.classList.remove('public-engage__thumb--on');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      if (!already) {
+        btn.classList.add('public-engage__thumb--on');
+        btn.setAttribute('aria-pressed', 'true');
+      }
+      toast(screen, already
+        ? 'Preference cleared.'
+        : next === 'like'
+          ? 'We’ll show more like this.'
+          : 'We’ll show fewer like this.');
+    });
+  });
+
+  return wrap;
+}
+
+export function mountPublicEventEngage(root, event, id, screen, helpers) {
+  const { onSoloRsvp, onRefreshBottomCtas } = helpers;
+
+  function paint() {
+    const state = getPublicEventState(id);
+    root.className = 'public-engage public-engage--v5';
+    root.innerHTML = '';
+
+    if (state === 'private_plan') {
+      const block = document.createElement('div');
+      block.className = 'public-engage__banner public-engage__banner--plan';
+      block.innerHTML = `
+        <span class="public-engage__banner-k">Plan with friends</span>
+        <span class="public-engage__banner-t">Private thread started</span>
+        <span class="public-engage__banner-s">Your crew plans together from here. The open listing is unchanged.</span>
+        <div class="public-engage__banner-actions">
+          <button type="button" class="public-engage__ghost" id="pe-edit-plan">${ICON_EDIT}<span>Edit plan</span></button>
+          <button type="button" class="public-engage__ghost" id="pe-open-private-chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <span>Open chat</span>
+          </button>
+        </div>
+      `;
+      root.appendChild(block);
+      block.querySelector('#pe-edit-plan').addEventListener('click', () => {
+        window.location.hash = `#/event/${id}/bring?flow=a`;
+      });
+      block.querySelector('#pe-open-private-chat').addEventListener('click', () => {
+        window.location.hash = `#/event/${id}/chat?private=1`;
+      });
+      root.appendChild(preferenceBlock(event, id, screen));
+      return;
+    }
+
+    if (state === 'solo') {
+      const block = document.createElement('div');
+      block.className = 'public-engage__banner public-engage__banner--solo';
+      block.innerHTML = `
+        <span class="public-engage__banner-k">Join on your own</span>
+        <span class="public-engage__banner-t">You're on the list</span>
+        <button type="button" class="public-engage__inline-action" id="pe-clear-solo">Switch option</button>
+      `;
+      root.appendChild(block);
+      block.querySelector('#pe-clear-solo').addEventListener('click', () => {
+        clearPublicEventState(id);
+        onRefreshBottomCtas?.();
+        paint();
+      });
+
+      const prim = document.createElement('div');
+      prim.className = 'public-engage__primaries';
+      const calBtn = document.createElement('button');
+      calBtn.type = 'button';
+      calBtn.className = 'public-engage__primary public-engage__primary--quiet';
+      calBtn.innerHTML = `${ICON_SAVE}<span class="public-engage__primary-label">Save to calendar</span>`;
+      calBtn.addEventListener('click', () => {
+        openSaveToCalendarSheet({
+          onConfirm: () => {
+            downloadICSForEvents([{ ...event, id }]);
+            toast(screen, 'Calendar file ready.');
+          },
+        });
+      });
+      prim.appendChild(calBtn);
+      root.appendChild(prim);
+      root.appendChild(preferenceBlock(event, id, screen));
+      return;
+    }
+
+    const prim = document.createElement('div');
+    prim.className = 'public-engage__primaries';
+    prim.setAttribute('role', 'group');
+    prim.setAttribute('aria-label', 'Choose how to respond');
+
+    const planBtn = document.createElement('button');
+    planBtn.type = 'button';
+    planBtn.className = 'public-engage__primary public-engage__primary--accent';
+    planBtn.innerHTML = `${ICON_PLAN}<span class="public-engage__primary-label">Plan with friends</span>`;
+    planBtn.addEventListener('click', () => {
+      window.location.hash = `#/event/${id}/bring?flow=a`;
+    });
+    prim.appendChild(planBtn);
+
+    const soloBtn = document.createElement('button');
+    soloBtn.type = 'button';
+    soloBtn.className = 'public-engage__primary';
+    soloBtn.innerHTML = `${ICON_SOLO}<span class="public-engage__primary-label">Join on your own</span>`;
+    soloBtn.addEventListener('click', () => {
+      setSoloGoing(id);
+      onSoloRsvp?.();
+      onRefreshBottomCtas?.();
+      toast(screen, 'Added to your SosialT calendar.');
+      paint();
+    });
+    prim.appendChild(soloBtn);
+
+    const calBtn = document.createElement('button');
+    calBtn.type = 'button';
+    calBtn.className = 'public-engage__primary public-engage__primary--quiet';
+    calBtn.innerHTML = `${ICON_SAVE}<span class="public-engage__primary-label">Save to calendar</span>`;
+    calBtn.addEventListener('click', () => {
+      openSaveToCalendarSheet({
+        onConfirm: () => {
+          downloadICSForEvents([{ ...event, id }]);
+          toast(screen, 'Calendar file ready.');
+        },
+      });
+    });
+    prim.appendChild(calBtn);
+
+    root.appendChild(prim);
+    root.appendChild(preferenceBlock(event, id, screen));
+  }
+
+  paint();
+}
