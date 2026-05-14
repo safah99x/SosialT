@@ -356,7 +356,7 @@ function renderEmptyUpcoming({ source, label } = {}) {
         <button class="empty-upcoming__secondary" data-route="${c.secondary.route}">${c.secondary.label}</button>
       </div>
       <p class="empty-upcoming__what">
-        New here? <a href="#/reference/public-vs-private" class="empty-upcoming__what-link">How SosialT works</a>
+        New here? <a href="#/reference/how-sosialt-works" class="empty-upcoming__what-link">How SosialT works</a>
       </p>
     </div>
   `;

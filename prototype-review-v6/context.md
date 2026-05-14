@@ -1,4 +1,4 @@
-# SocialT — Prototype Context (review build)
+# SosialT — Prototype Context (review build)
 
 Standalone reference so another engineer or LLM can **reproduce the UX and codebase from scratch**. This describes the **shipping prototype** under `prototype-review/` (Vite SPA, hash router, static JS screens).
 
@@ -6,7 +6,7 @@ Standalone reference so another engineer or LLM can **reproduce the UX and codeb
 
 ## Product
 
-SocialT (“SosialT” / “SocialT”) is a **warm, Scandinavian-hygge** mobile-first web prototype: small-group planning—quick pings (now-ish), events (committed time/place/poll/flex), circles, chats, calendar, notifications, onboarding, and invite deep links.
+SosialT is a **warm, Scandinavian-hygge** mobile-first web prototype: small-group planning—quick pings (now-ish), events (committed time/place/poll/flex), circles, chats, calendar, notifications, onboarding, and invite deep links.
 
 **Voice**: dry, concise, observant—“smart friend”, not bubbly marketing copy.
 

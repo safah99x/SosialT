@@ -40,6 +40,7 @@ import { renderEventInvite } from './screens/invite/eventInvite.js';
 import { renderInviteDeclined } from './screens/invite/inviteDeclined.js';
 import { renderInviteCompose } from './screens/inviteCompose.js';
 import { renderReferencePublicPrivate } from './screens/referencePublicPrivate.js';
+import { renderHowSosialtWorks } from './screens/howSosialtWorks.js';
 import { renderInviteSomeoneNewDemo } from './screens/inviteSomeoneNewDemo.js';
 import { renderInstallLanding } from './screens/installLanding.js';
 import { bumpProtoActivity, maybeAutoQuizNudge } from './lib/protoActivity.js';
@@ -49,6 +50,7 @@ const staticRoutes = {
   '/quick-ping':        (c) => renderQuickPing(c),
   '/create-event':      (c, params) => renderCreateEvent(c, { params }),
   '/reference/public-vs-private': (c) => renderReferencePublicPrivate(c),
+  '/reference/how-sosialt-works': (c) => renderHowSosialtWorks(c),
   '/quick-ping/sent':   (c, params) => renderSuccess(c, {
     title: 'Sent',
     subtitle: 'Your people will see it in a sec.',

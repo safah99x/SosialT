@@ -53,6 +53,7 @@ export function renderReferencePublicPrivate(container) {
     </div>
     <div class="cta-wrapper">
       <button type="button" class="cta-button" id="ref-pp-done">Back to browsing</button>
+      <p class="ref-pp-premium__footnote"><a href="#/reference/how-sosialt-works" class="event-detail__ref-link">How SosialT works (overview)</a></p>
     </div>
   `;
   screen.appendChild(body);

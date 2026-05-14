@@ -1864,6 +1864,39 @@
   margin: 0;
   color: var(--color-text);
 }
+.screens-panel__sub {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+.screens-panel__flow-intro {
+  margin: 0 4px 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.screens-panel__flow--start .screens-panel__flow-title {
+  color: var(--color-accent-strong);
+}
+.screens-panel__flow--path .screens-panel__flow-title {
+  color: var(--color-text);
+  letter-spacing: 0.04em;
+}
+.screens-panel__flow--path {
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(44, 40, 37, 0.06);
+}
+.screens-panel__flow--review {
+  margin-top: 4px;
+  padding: 10px 8px 8px;
+  border-radius: 12px;
+  background: rgba(232, 197, 71, 0.08);
+  border: 1px solid rgba(232, 197, 71, 0.22);
+}
+.screens-panel__flow--review .screens-panel__flow-title {
+  color: #6e5413;
+}
 .screens-panel__close {
   flex-shrink: 0;
   width: 28px;
@@ -6780,7 +6813,11 @@
   line-height: 1.38;
   color: var(--color-text-secondary);
 }
-
+.ref-pp-premium__footnote {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 13px;
+}
 /* ── Chat-new v4: accessible search toggle + list polish ── */
 .visually-hidden {
   position: absolute;
@@ -6861,6 +6898,112 @@
   outline: none;
   border-color: rgba(232, 197, 71, 0.5);
   box-shadow: 0 0 0 2px rgba(232, 197, 71, 0.2);
+}
+
+/* ── How SosialT works (overview) ── */
+.how-sosialt-works {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(852px - 54px);
+  padding-bottom: 24px;
+}
+.how-sosialt-works__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px calc(24px + env(safe-area-inset-bottom));
+}
+.how-sosialt-works__lede {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+.how-sosialt-works__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.how-sosialt-works__step {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(44, 40, 37, 0.08);
+}
+.how-sosialt-works__step:first-of-type {
+  border-top: none;
+  padding-top: 4px;
+}
+.how-sosialt-works__step-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent-bg);
+  color: var(--color-accent-strong);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.how-sosialt-works__step-body {
+  flex: 1;
+  min-width: 0;
+}
+.how-sosialt-works__step-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+.how-sosialt-works__step-title {
+  margin: 0 0 6px;
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+.how-sosialt-works__step-copy {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.how-sosialt-works__more {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-warm);
+  border: 1px solid rgba(44, 40, 37, 0.08);
+}
+.how-sosialt-works__more-label {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.how-sosialt-works__more-link {
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-accent-strong);
+  text-decoration: none;
+}
+.how-sosialt-works__more-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.how-sosialt-works__cta {
+  margin-top: 18px;
+  padding: 0 !important;
 }
 
 /* ── Event chat: clearer hierarchy (classic + draft alt) ── */

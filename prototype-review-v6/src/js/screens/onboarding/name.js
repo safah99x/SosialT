@@ -26,7 +26,7 @@ export function renderName(container) {
     </div>
 
     <div class="onb-form__cta-wrap onb-name__cta-wrap">
-      <button class="cta-button onb-form__cta onb-name__cta" id="onb-next">Let's SocialT!</button>
+      <button class="cta-button onb-form__cta onb-name__cta" id="onb-next">Let's SosialT!</button>
     </div>
   `;
 

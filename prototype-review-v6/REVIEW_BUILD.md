@@ -1,4 +1,4 @@
-# SocialT — End-to-end Review Build
+# SosialT — End-to-end Review Build
 
 This folder is a **review-only fork** of `../prototype`. It exists so the customer
 can sign off on a clean, end-to-end version of the app without touching the

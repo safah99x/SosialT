@@ -378,7 +378,7 @@ export function renderEventDetail(container, { id }) {
 
       <p class="event-detail__desc">${event.desc}</p>
 
-      ${isPublic ? `<p class="event-detail__public-hint event-detail__public-hint--v2">Open listing · <a href="#/reference/public-vs-private" class="event-detail__ref-link">How plans work</a></p>` : ''}
+      ${isPublic ? `<p class="event-detail__public-hint event-detail__public-hint--v2">Open listing · <a href="#/reference/how-sosialt-works" class="event-detail__ref-link">How SosialT works</a></p>` : ''}
 
       ${isPublic ? socialProofSection(attendees, event) : ''}
 
