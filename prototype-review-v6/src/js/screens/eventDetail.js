@@ -388,10 +388,15 @@ export function renderEventDetail(container, { id }) {
       <div class="attendees">
         <div class="attendees__head">
           <h2 class="attendees__title">Friends</h2>
-          <button class="attendees__invite" id="attendees-invite">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            Invite
-          </button>
+          <div class="attendees__actions">
+            <button type="button" class="attendees__chat" id="attendees-chat" aria-label="Open group chat">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15A2 2 0 0 1 19 17H7L3 21V5A2 2 0 0 1 5 3H19A2 2 0 0 1 21 5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            </button>
+            <button type="button" class="attendees__invite" id="attendees-invite">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Invite
+            </button>
+          </div>
         </div>
         <div class="attendees__tabs" id="attendees-tabs">
           <button class="attendees__tab attendees__tab--active" data-rsvp="all">All <span>${counts.all}</span></button>
@@ -402,17 +407,12 @@ export function renderEventDetail(container, { id }) {
         <ul class="attendees__list" id="attendees-list"></ul>
       </div>` : ''}
 
-      ${!isPublic ? `
-      <div class="event-detail__cta-row ${viewerIsHost ? 'event-detail__cta-row--host' : 'event-detail__cta-row--three'}">
-        ${viewerIsHost ? '' : `<button class="cta-button event-detail__cta" id="event-rsvp">I'm in</button>`}
-        <button class="event-detail__chat" id="event-chat" aria-label="Open chat">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 15A2 2 0 0 1 19 17H7L3 21V5A2 2 0 0 1 5 3H19A2 2 0 0 1 21 5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="event-detail__share" id="event-share" aria-label="Share">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 6L12 2L8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-      </div>` : `
-      <div class="event-detail__secondary-actions" id="event-public-bottom"></div>`}
+      ${!isPublic && !viewerIsHost ? `
+      <div class="event-detail__cta-row">
+        <button class="cta-button event-detail__cta" id="event-rsvp">I'm in</button>
+      </div>` : ''}
+      ${isPublic ? `
+      <div class="event-detail__secondary-actions" id="event-public-bottom"></div>` : ''}
     </div>
   `;
 
@@ -457,6 +457,10 @@ export function renderEventDetail(container, { id }) {
       });
     });
 
+    screen.querySelector('#attendees-chat').addEventListener('click', () => {
+      window.location.hash = `#/event/${id}/chat`;
+    });
+
     const rsvp = screen.querySelector('#event-rsvp');
     if (rsvp) {
       rsvp.addEventListener('click', () => {
@@ -474,21 +478,6 @@ export function renderEventDetail(container, { id }) {
   screen.querySelector('#event-back').addEventListener('click', () => {
     goBack('#/events');
   });
-
-  if (!isPublic) {
-    screen.querySelector('#event-chat').addEventListener('click', () => {
-      window.location.hash = `#/event/${id}/chat`;
-    });
-
-    screen.querySelector('#event-share').addEventListener('click', () => {
-      const toastEl = document.createElement('div');
-      toastEl.className = 'sosialt-toast';
-      toastEl.textContent = 'Share sheet (prototype)';
-      screen.appendChild(toastEl);
-      setTimeout(() => toastEl.classList.add('sosialt-toast--out'), 1400);
-      setTimeout(() => toastEl.remove(), 1800);
-    });
-  }
 
   if (event.publicSource) {
     mountPublicEventBottom(screen, event, id);

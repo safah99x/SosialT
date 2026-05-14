@@ -124,6 +124,13 @@ function parseHash() {
 function resolve({ path, params }) {
   if (staticRoutes[path]) return (c) => staticRoutes[path](c, params);
 
+  const chatDraft = path.match(/^\/event\/([\w-]+)\/chat\/draft$/);
+  if (chatDraft) {
+    const merged = new URLSearchParams(params);
+    merged.set('layout', 'draft');
+    return (c) => renderEventChat(c, { id: chatDraft[1], params: merged });
+  }
+
   const chat = path.match(/^\/event\/([\w-]+)\/chat$/);
   if (chat) return (c) => renderEventChat(c, { id: chat[1], params });
 

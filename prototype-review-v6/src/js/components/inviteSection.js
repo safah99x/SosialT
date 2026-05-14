@@ -86,7 +86,6 @@ export function createInviteSection() {
   header.className = 'invite-section__header invite-section__header--v4';
   header.innerHTML = `
     <h3 class="invite-section__heading">Who to invite</h3>
-    <p class="invite-section__sub">Circles, friends already on SosialT, or people from contacts who are not on the app yet.</p>
   `;
   wrapper.appendChild(header);
 

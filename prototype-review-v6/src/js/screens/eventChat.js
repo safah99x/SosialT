@@ -70,27 +70,58 @@ export function renderEventChat(container, { id, params } = {}) {
   const event = getEvent(id) || getEvent('coffee-meetup');
   const isPoll = params.has('poll');
   const isFlex = params.has('flex');
-  // REVIEW (Workshop 7): "Plan with friends" lands users here with ?private=1.
-  // The thread keeps the public event card on top (date/place inherited)
-  // and shows a tiny header banner so people remember the public listing
-  // continues to exist independently.
+  const isDraftLayout = params.get('layout') === 'draft';
   const isPrivate = params.has('private');
   const isFresh = params.has('new') || params.has('poll') || params.has('flex') || isPrivate;
+
+  const avatarsRow = `${ATTENDEES_PREVIEW.slice(0, 4).map((a, i) => `<span class="chat-rsvp-bar__av" style="background:${a.color}; z-index:${10 - i}">${a.name[0]}</span>`).join('')}${ATTENDEES_PREVIEW.length > 4 ? `<span class="chat-rsvp-bar__more">+${ATTENDEES_PREVIEW.length - 4}</span>` : ''}`;
+  const rsvpPills = `
+        <span class="chat-rsvp-bar__pill" data-rsvp-pill="going" role="button" tabindex="0">Going</span>
+        <span class="chat-rsvp-bar__pill" data-rsvp-pill="maybe" role="button" tabindex="0">Maybe</span>
+        <span class="chat-rsvp-bar__pill" data-rsvp-pill="not-going" role="button" tabindex="0">Not going</span>`;
+
+  const rsvpBlock = isDraftLayout
+    ? `
+    <button type="button" class="chat-rsvp-bar chat-rsvp-bar--draft" id="chat-rsvp-bar">
+      <div class="chat-rsvp-bar--draft__row">
+        <div class="chat-rsvp-bar__avatars" aria-hidden="true">${avatarsRow}</div>
+        <div class="chat-rsvp-bar--draft__copy">
+          <span class="chat-rsvp-bar--draft__k">Your RSVP</span>
+          <span class="chat-rsvp-bar--draft__sub">Pick a status · row opens event details</span>
+        </div>
+      </div>
+      <div class="chat-rsvp-bar__pills chat-rsvp-bar__pills--draft">${rsvpPills}
+      </div>
+      <svg class="chat-rsvp-bar__chev chat-rsvp-bar__chev--draft" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>`
+    : `
+    <button class="chat-rsvp-bar chat-rsvp-bar--classic" id="chat-rsvp-bar" type="button">
+      <div class="chat-rsvp-bar__row1">
+        <div class="chat-rsvp-bar__avatars" aria-hidden="true">${avatarsRow}</div>
+        <div class="chat-rsvp-bar__middle">
+          <span class="chat-rsvp-bar__hint">On this invite</span>
+          <span class="chat-rsvp-bar__label">How are you leaning?</span>
+        </div>
+      </div>
+      <div class="chat-rsvp-bar__pills">${rsvpPills}
+      </div>
+      <svg class="chat-rsvp-bar__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>`;
 
   container.innerHTML = '';
 
   const screen = document.createElement('div');
-  screen.className = 'screen chat-screen';
+  screen.className = `screen chat-screen${isDraftLayout ? ' chat-screen--draft' : ''}`;
 
   screen.innerHTML = `
-    <header class="chat-header${isPrivate ? ' chat-header--private' : ''}">
+    <header class="chat-header${isPrivate ? ' chat-header--private' : ''}${isDraftLayout ? ' chat-header--tight' : ''}">
       <button class="chat-header__back" id="chat-back" aria-label="Back">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <span class="chat-header__avatar" style="background-image:url('${event.image}')"></span>
       <div class="chat-header__title">
         <h1>${event.title}${isPrivate ? ' <span class="chat-header__priv-pill">Private plan</span>' : ''}</h1>
-        <span>${isPrivate ? 'With your circle · public listing stays as-is' : `Event . ${event.group}`}</span>
+        <span>${isPrivate ? 'Circle chat · listing unchanged' : `${event.date} · ${event.time}`}</span>
       </div>
       <button class="chat-header__menu" id="chat-menu" aria-label="More">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="19" r="1.6" fill="currentColor"/></svg>
@@ -112,27 +143,12 @@ export function renderEventChat(container, { id, params } = {}) {
       </div>
     </header>
 
-    <button class="chat-rsvp-bar" id="chat-rsvp-bar" type="button">
-      <div class="chat-rsvp-bar__avatars" aria-hidden="true">
-          ${ATTENDEES_PREVIEW.slice(0, 4).map((a, i) => `<span class="chat-rsvp-bar__av" style="background:${a.color}; z-index:${10 - i}">${a.name[0]}</span>`).join('')}
-          ${ATTENDEES_PREVIEW.length > 4 ? `<span class="chat-rsvp-bar__more">+${ATTENDEES_PREVIEW.length - 4}</span>` : ''}
-      </div>
-      <div class="chat-rsvp-bar__middle">
-        <span class="chat-rsvp-bar__hint">You're on this invite</span>
-        <span class="chat-rsvp-bar__label">How are you leaning?</span>
-      </div>
-      <div class="chat-rsvp-bar__pills">
-        <span class="chat-rsvp-bar__pill" data-rsvp-pill="going" role="button" tabindex="0">Going</span>
-        <span class="chat-rsvp-bar__pill" data-rsvp-pill="maybe" role="button" tabindex="0">Maybe</span>
-        <span class="chat-rsvp-bar__pill" data-rsvp-pill="not-going" role="button" tabindex="0">Not going</span>
-      </div>
-      <svg class="chat-rsvp-bar__chev" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+    ${rsvpBlock}
 
     <div class="chat-thread" id="chat-thread"></div>
 
     <form class="chat-composer" id="chat-composer">
-      <input class="chat-composer__input" id="chat-input" type="text" placeholder="Type a message" autocomplete="off" />
+      <input class="chat-composer__input" id="chat-input" type="text" placeholder="Message the group" autocomplete="off" />
       <button class="chat-composer__send" id="chat-send" aria-label="Send" type="submit">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>

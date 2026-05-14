@@ -2338,10 +2338,10 @@
 .chat-thread {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-base);
+  padding: 14px 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .chat-day {
   align-self: center;
@@ -2363,9 +2363,9 @@
 }
 .chat-row {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-end;
-  max-width: 85%;
+  max-width: 82%;
 }
 .chat-row--me { align-self: flex-end; flex-direction: row-reverse; }
 .chat-row--them { align-self: flex-start; }
@@ -2382,11 +2382,11 @@
   flex-shrink: 0;
 }
 .chat-bubble {
-  padding: 10px 14px;
+  padding: 11px 15px;
   border-radius: 18px;
   font-family: var(--font-body);
   font-size: 14px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--color-text);
   box-shadow: var(--shadow-subtle);
   word-wrap: break-word;
@@ -2411,12 +2411,12 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px;
+  padding: 12px;
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   text-align: left;
-  max-width: 85%;
+  max-width: 88%;
   transition: transform var(--duration-fast) var(--ease-out);
 }
 .chat-event-card:hover { transform: translateY(-1px); }
@@ -2523,14 +2523,14 @@
 .chat-composer {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  gap: 10px;
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
   background: var(--color-surface);
   border-top: 1px solid rgba(44, 40, 37, 0.06);
 }
 .chat-composer__input {
   flex: 1;
-  padding: 12px 18px;
+  padding: 11px 16px;
   background: var(--color-bg-warm);
   border-radius: 999px;
   font-family: var(--font-body);
@@ -2926,6 +2926,30 @@
   transition: all var(--duration-fast) var(--ease-out);
 }
 .attendees__invite:hover { background: var(--color-accent-soft); color: var(--color-text); }
+
+.attendees__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.attendees__chat {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(44, 40, 37, 0.1);
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.attendees__chat:hover {
+  background: var(--color-surface-warm);
+  border-color: rgba(44, 40, 37, 0.14);
+}
 
 .attendees__overview {
   display: flex;

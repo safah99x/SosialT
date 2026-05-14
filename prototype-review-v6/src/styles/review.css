@@ -6863,3 +6863,115 @@
   box-shadow: 0 0 0 2px rgba(232, 197, 71, 0.2);
 }
 
+/* ── Event chat: clearer hierarchy (classic + draft alt) ── */
+.chat-header--tight {
+  padding: 10px 12px;
+  gap: 8px;
+}
+.chat-header--tight .chat-header__avatar {
+  width: 32px;
+  height: 32px;
+}
+.chat-header--tight .chat-header__title h1 {
+  font-size: 14px;
+}
+.chat-header--tight .chat-header__title span {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+}
+
+.chat-rsvp-bar--classic {
+  padding: 10px 14px 12px;
+  gap: 8px;
+  position: relative;
+}
+.chat-rsvp-bar__row1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-rsvp-bar--classic .chat-rsvp-bar__middle {
+  flex: 1;
+  min-width: 0;
+}
+.chat-rsvp-bar--classic .chat-rsvp-bar__hint {
+  font-size: 10px;
+  letter-spacing: 0.07em;
+}
+.chat-rsvp-bar--classic .chat-rsvp-bar__label {
+  font-size: 14px;
+}
+.chat-rsvp-bar--classic .chat-rsvp-bar__pills {
+  gap: 6px;
+}
+.chat-rsvp-bar--classic .chat-rsvp-bar__pill {
+  padding: 8px 5px;
+  font-size: 12px;
+}
+.chat-rsvp-bar--classic .chat-rsvp-bar__chev {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  margin-top: 0;
+}
+
+.chat-rsvp-bar--draft {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  background: linear-gradient(180deg, rgba(250, 247, 242, 0.9), var(--color-surface));
+}
+.chat-rsvp-bar--draft__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chat-rsvp-bar--draft__copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.chat-rsvp-bar--draft__k {
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+}
+.chat-rsvp-bar--draft__sub {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+}
+.chat-rsvp-bar__pills--draft {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chat-rsvp-bar__pills--draft .chat-rsvp-bar__pill {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 999px;
+}
+.chat-rsvp-bar__chev--draft {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 0;
+}
+
+.chat-screen--draft .chat-thread {
+  background: linear-gradient(180deg, rgba(44, 40, 37, 0.02), transparent 48px);
+}
+
+.public-engage {
+  margin-top: 6px;
+}
+.public-engage__grid {
+  margin-top: 4px;
+}
+
