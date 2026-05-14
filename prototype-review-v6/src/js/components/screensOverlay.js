@@ -138,7 +138,6 @@ export function mountScreensOverlay({ syncRoute } = {}) {
   head.innerHTML = `
     <div class="screens-panel__head-text">
       <h3>Screen map</h3>
-      <p class="screens-panel__sub">SosialT review prototype — paths are labeled A–D below.</p>
     </div>
     <button type="button" class="screens-panel__close" id="screens-close" aria-label="Close">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
