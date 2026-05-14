@@ -7,7 +7,7 @@
 const KEY = (id) => `sosialt_pe_${id}`;
 const BRANCH = (id) => `sosialt_pe_branch_${id}`;
 // REVIEW (Workshop 7): preference signal per public event ('like' / 'dislike' / null).
-// Captured on the event detail surface, not on the first browse card.
+// Captured on event detail and on Home "Ideas around you" cards.
 const PREF_KEY = (id) => `sosialt_pe_pref_${id}`;
 
 export function getPublicEventState(id) {

@@ -2919,6 +2919,81 @@
   color: var(--color-text-muted);
 }
 
+.profile-subpage {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+.profile-subpage__body {
+  flex: 1;
+  padding: 16px 18px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.profile-subpage__lead {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.profile-subpage__list {
+  margin: 0;
+  padding: 0 0 0 18px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.profile-subpage__note {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-warm);
+  border: 1px solid rgba(44, 40, 37, 0.08);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.profile-subpage__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+.profile-subpage__choice {
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(44, 40, 37, 0.1);
+  background: var(--color-surface);
+  font-size: 15px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.profile-subpage__choice:hover {
+  border-color: rgba(232, 197, 71, 0.45);
+}
+.profile-subpage__choice--on {
+  border-color: rgba(232, 197, 71, 0.75);
+  background: var(--color-accent-bg);
+}
+.profile-subpage__choice-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+.profile-subpage__empty {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
 /* iOS-ish toggle. */
 .notif-toggle {
   position: relative;
@@ -4339,6 +4414,36 @@
   color: var(--color-text-muted);
   text-align: center;
 }
+.public-engage__pref--compact {
+  margin-top: 10px;
+  padding: 10px 11px 11px;
+  gap: 8px;
+}
+.public-engage__pref--compact .public-engage__pref-copy {
+  margin-bottom: 0;
+}
+.public-engage__pref--compact .public-engage__pref-title {
+  font-size: 13px;
+  margin: 0 0 2px;
+}
+.public-engage__pref--compact .public-engage__pref-lede {
+  font-size: 11px;
+  line-height: 1.4;
+}
+.public-engage__pref--compact .public-engage__pref-thumbs {
+  gap: 8px;
+}
+.public-engage__pref--compact .public-engage__thumb {
+  padding: 10px 6px;
+  gap: 6px;
+}
+.public-engage__pref--compact .public-engage__thumb-label {
+  font-size: 11px;
+}
+.public-engage__pref-foot--compact {
+  margin-top: 6px;
+  font-size: 10px;
+}
 
 /* Event detail — compact friends overlap (open listings) */
 .event-social-proof {
@@ -4987,8 +5092,46 @@
 }
 .nearby-card__foot--simple {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
   margin-top: 10px;
+  flex-wrap: nowrap;
+}
+.nearby-card__friend-going {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-secondary);
+  line-height: 1.35;
+}
+.nearby-card__thumb-pair {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.nearby-card__thumb-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(44, 40, 37, 0.12);
+  background: var(--color-surface-warm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 0;
+  transition: border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.nearby-card__thumb-btn svg {
+  display: block;
+}
+.nearby-card__thumb-btn--on {
+  border-color: rgba(232, 197, 71, 0.75);
+  background: var(--color-accent-bg);
+  color: var(--color-text);
 }
 .nearby-card__explore {
   display: inline-flex;
@@ -6467,7 +6610,7 @@
   border: 0;
   background: var(--color-surface);
   border-bottom: 1px solid rgba(44, 40, 37, 0.08);
-  padding: 12px 14px 14px;
+  padding: 12px 18px 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;

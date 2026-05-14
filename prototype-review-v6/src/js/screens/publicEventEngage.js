@@ -1,7 +1,6 @@
 /**
- * Public listing engagement — status + action cards + calendar row + prefs.
- * Rich context (headlines, card subtitles) restored for open listings; thumbs
- * block matches feed-tuning copy used elsewhere in v6.
+ * Public listing engagement — status + primary actions + save-to-calendar + Around-you preference thumbs.
+ * `createPublicPreferenceBlock` is reused on Home carousel cards for in-feed tuning.
  */
 import {
   getPublicEventState,
@@ -27,31 +26,46 @@ function toast(screen, msg) {
   setTimeout(() => t.remove(), 2000);
 }
 
-function preferenceBlock(event, id, screen) {
+/**
+ * @param {{ compact?: boolean }} opts — compact: home carousel cards; taps don't bubble to parent.
+ */
+export function createPublicPreferenceBlock(event, id, screen, opts = {}) {
+  const compact = !!opts.compact;
   const current = getPreference(id);
   const tagPhrase = event.tag ? ` · e.g. <strong>${event.tag}</strong>` : '';
   const wrap = document.createElement('div');
-  wrap.className = 'public-engage__pref public-engage__pref--thumbs';
+  wrap.className = compact
+    ? 'public-engage__pref public-engage__pref--thumbs public-engage__pref--compact'
+    : 'public-engage__pref public-engage__pref--thumbs';
+  if (compact) {
+    wrap.addEventListener('click', (e) => e.stopPropagation());
+  }
+  const iconUp = compact ? 22 : 28;
+  const iconDown = compact ? 22 : 28;
   wrap.innerHTML = `
     <div class="public-engage__pref-copy">
       <p class="public-engage__pref-title">Better suggestions?</p>
-      <p class="public-engage__pref-lede">Shapes what shows under <strong>Around you</strong>${tagPhrase}. Guests don't see your taps.</p>
+      <p class="public-engage__pref-lede">${compact
+    ? `Tunes <strong>Around you</strong>${tagPhrase}. Your taps stay private.`
+    : `Shapes what shows under <strong>Around you</strong>${tagPhrase}. Guests don't see your taps.`}</p>
     </div>
     <div class="public-engage__pref-thumbs" role="group" aria-label="Cue Around-you suggestions">
       <button type="button" class="public-engage__thumb public-engage__thumb--up ${current === 'like' ? 'public-engage__thumb--on' : ''}" data-pref="like" aria-pressed="${current === 'like' ? 'true' : 'false'}">
         <span class="public-engage__thumb-icon public-engage__thumb-icon--solid" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+          <svg width="${iconUp}" height="${iconUp}" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
         </span>
         <span class="public-engage__thumb-label">More like this</span>
       </button>
       <button type="button" class="public-engage__thumb public-engage__thumb--down ${current === 'dislike' ? 'public-engage__thumb--on' : ''}" data-pref="dislike" aria-pressed="${current === 'dislike' ? 'true' : 'false'}">
         <span class="public-engage__thumb-icon public-engage__thumb-icon--solid" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.58-6.59c.37-.36.59-.86.59-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>
+          <svg width="${iconDown}" height="${iconDown}" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.58-6.59c.37-.36.59-.86.59-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>
         </span>
         <span class="public-engage__thumb-label">Less like this</span>
       </button>
     </div>
-    <p class="public-engage__pref-foot">Tap again on the same thumb to clear.</p>
+    ${compact
+    ? '<p class="public-engage__pref-foot public-engage__pref-foot--compact">Same thumb again clears.</p>'
+    : '<p class="public-engage__pref-foot">Tap again on the same thumb to clear.</p>'}
   `;
 
   wrap.querySelectorAll('[data-pref]').forEach((btn) => {
@@ -65,6 +79,47 @@ function preferenceBlock(event, id, screen) {
       });
       if (!already) {
         btn.classList.add('public-engage__thumb--on');
+        btn.setAttribute('aria-pressed', 'true');
+      }
+      toast(screen, already
+        ? 'Preference cleared.'
+        : next === 'like'
+          ? 'We’ll show more like this.'
+          : 'We’ll show fewer like this.');
+    });
+  });
+
+  return wrap;
+}
+
+const THUMB_UP_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>';
+const THUMB_DOWN_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.58-6.59c.37-.36.59-.86.59-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>';
+
+/** Compact thumbs for home "Ideas around you" cards (beside Explore). */
+export function createHomeNearbyThumbPair(id, screen) {
+  const wrap = document.createElement('div');
+  wrap.className = 'nearby-card__thumb-pair';
+  wrap.setAttribute('role', 'group');
+  wrap.setAttribute('aria-label', 'Tune Around-you suggestions');
+  wrap.addEventListener('click', (e) => e.stopPropagation());
+
+  const current = getPreference(id);
+  wrap.innerHTML = `
+    <button type="button" class="nearby-card__thumb-btn nearby-card__thumb-btn--up ${current === 'like' ? 'nearby-card__thumb-btn--on' : ''}" data-pref="like" aria-label="More like this" aria-pressed="${current === 'like' ? 'true' : 'false'}">${THUMB_UP_SVG}</button>
+    <button type="button" class="nearby-card__thumb-btn nearby-card__thumb-btn--down ${current === 'dislike' ? 'nearby-card__thumb-btn--on' : ''}" data-pref="dislike" aria-label="Less like this" aria-pressed="${current === 'dislike' ? 'true' : 'false'}">${THUMB_DOWN_SVG}</button>
+  `;
+
+  wrap.querySelectorAll('[data-pref]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.pref;
+      const already = getPreference(id) === next;
+      setPreference(id, already ? null : next);
+      wrap.querySelectorAll('[data-pref]').forEach((b) => {
+        b.classList.remove('nearby-card__thumb-btn--on');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      if (!already) {
+        btn.classList.add('nearby-card__thumb-btn--on');
         btn.setAttribute('aria-pressed', 'true');
       }
       toast(screen, already
@@ -225,7 +280,7 @@ export function mountPublicEventEngage(root, event, id, screen, helpers) {
         },
       });
     });
-    root.appendChild(preferenceBlock(event, id, screen));
+    root.appendChild(createPublicPreferenceBlock(event, id, screen));
   }
 
   paint();

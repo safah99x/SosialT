@@ -26,9 +26,8 @@ const ROWS = [
       // REVIEW (Workshop 6): "Edit profile" now opens the profile-edit screen
       // with photo upload front and centre.
       { id: 'edit',   label: 'Edit profile',         icon: 'user', route: '#/profile/edit' },
-      // REVIEW (Workshop 5): renamed from "Calendar sync" — wording stays
-      // away from "sync" because the integration is one-way.
-      { id: 'cal',    label: 'Save to calendar',     icon: 'cal', route: '#/calendar'  },
+      // REVIEW: Calendar sync — how SosialT calendar maps to the phone (see profileMore.js).
+      { id: 'cal',    label: 'Calendar sync',        icon: 'cal', route: '#/profile/calendar-sync' },
       // REVIEW (Workshop 6): now routes to actual notification preferences
       // (defaults ON), not the inbox.
       { id: 'notif',  label: 'Notification settings', icon: 'bell', route: '#/profile/notifications' },
@@ -37,9 +36,9 @@ const ROWS = [
   {
     title: 'Privacy',
     items: [
-      { id: 'visib', label: 'Who can ping you', icon: 'eye'    },
-      { id: 'block', label: 'Blocked',          icon: 'shield' },
-      { id: 'data',  label: 'Your data',        icon: 'data'   },
+      { id: 'visib', label: 'Who can ping you', icon: 'eye',    route: '#/profile/ping-visibility' },
+      { id: 'block', label: 'Blocked',          icon: 'shield', route: '#/profile/blocked' },
+      { id: 'data',  label: 'Your data',        icon: 'data',   route: '#/profile/your-data' },
     ],
   },
   // REVIEW (Workshop 7): stable Feedback area lives in profile. Keeps user
@@ -100,7 +99,7 @@ export function renderProfile(container) {
         <span class="profile-stat__num">${USER.stats.circles}</span>
         <span class="profile-stat__lbl">Circles</span>
       </div>
-      <div class="profile-stat">
+      <div class="profile-stat" data-route="#/chats">
         <span class="profile-stat__num">${USER.stats.friends}</span>
         <span class="profile-stat__lbl">Friends</span>
       </div>
@@ -124,6 +123,15 @@ export function renderProfile(container) {
         <svg class="profile-list__chev" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       `;
       row.addEventListener('click', () => {
+        if (it.id === 'rate') {
+          const t = document.createElement('div');
+          t.className = 'sosialt-toast';
+          t.textContent = 'Thanks — in the full app this opens the App Store or Play Store.';
+          screen.appendChild(t);
+          setTimeout(() => t.classList.add('sosialt-toast--out'), 1800);
+          setTimeout(() => t.remove(), 2200);
+          return;
+        }
         if (it.route) window.location.hash = it.route;
       });
       list.appendChild(row);

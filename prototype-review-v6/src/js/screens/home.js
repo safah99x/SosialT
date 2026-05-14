@@ -16,8 +16,9 @@ import { mountBottomNav } from '../components/bottomNav.js';
 import { getHeroLine, getHomeContext } from '../lib/dynamicCopy.js';
 // REVIEW: read onboarding session for new-user state
 import { getSession } from '../lib/session.js';
-import { listSavedEventIds, hasBranchedFromPublic } from '../lib/publicEventState.js';
+import { listSavedEventIds, hasBranchedFromPublic, getPublicEventState } from '../lib/publicEventState.js';
 import { getEvent, getRsvpCounts } from './eventDetail.js';
+import { createHomeNearbyThumbPair } from './publicEventEngage.js';
 import { rsvpMicroRowHtml } from '../components/rsvpOverview.js';
 import { maybeMountQuizReprompt } from '../components/quizPrompt.js';
 
@@ -229,6 +230,10 @@ export async function renderHome(container) {
       ${NEARBY.map((id) => {
         const e = getEvent(id);
         const branched = hasBranchedFromPublic(id);
+        const soloHere = getPublicEventState(id) === 'solo';
+        const friendHint = soloHere && e.friendAlsoGoing
+          ? `<p class="nearby-card__friend-going">${e.friendAlsoGoing} is also going</p>`
+          : '';
         return `
           <article class="nearby-card nearby-card--public nearby-card--simple${branched ? ' nearby-card--branched' : ''}" data-event="${id}">
             <div class="nearby-card__image" style="background-image: url('${e.image}')">
@@ -244,6 +249,7 @@ export async function renderHome(container) {
                 </span>
                 <span class="nearby-card__line">${pinSvg()} ${e.place}</span>
               </div>
+              ${friendHint}
               <div class="nearby-card__foot nearby-card__foot--simple">
                 <span class="nearby-card__explore">
                   Explore
@@ -257,6 +263,15 @@ export async function renderHome(container) {
     </div>
   `;
   screen.appendChild(nearby);
+
+  screen.querySelectorAll('.nearby-card--public[data-event]').forEach((card) => {
+    const id = card.dataset.event;
+    const foot = card.querySelector('.nearby-card__foot');
+    const explore = card.querySelector('.nearby-card__explore');
+    if (foot && explore) {
+      foot.insertBefore(createHomeNearbyThumbPair(id, screen), explore);
+    }
+  });
 
   // 7. Bottom nav
   mountBottomNav({ active: 'home' });

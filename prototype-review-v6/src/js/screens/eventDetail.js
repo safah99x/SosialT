@@ -2,78 +2,43 @@
  * Event Detail screen.
  *
  * Open listings ("Around you"): minimal explainer, overlap social proof row,
- * three primary actions in `publicEventEngage.js`, secondary Calendar + Share
- * (Chat appears only after "Plan with friends" creates a private thread).
+ * three primary actions in `publicEventEngage.js`, phone calendar in that block only.
+ * Chat shortcut appears at the bottom only after "Plan with friends" creates a private thread.
  * Private circle events keep the full Friends list + RSVP strip.
  */
 import { mountInviteSheet } from './inviteFriends.js';
 import { goBack } from '../lib/nav.js';
 import { mountPublicEventEngage } from './publicEventEngage.js';
 import { getPublicEventState } from '../lib/publicEventState.js';
-import { openSaveToCalendarSheet, downloadICSForEvents } from '../lib/calendarExport.js';
 
-/** Bottom row for public listings: Calendar + Share, or Chat + Share after a private plan exists. */
-function mountPublicEventBottom(screen, event, id) {
+/** Bottom row for public listings: Chat only when a private crew thread exists (calendar lives in engage block). */
+function mountPublicEventBottom(screen, _event, id) {
   const wrap = screen.querySelector('#event-public-bottom');
   if (!wrap) return;
 
-  function toast(msg) {
-    const t = document.createElement('div');
-    t.className = 'sosialt-toast';
-    t.textContent = msg;
-    screen.appendChild(t);
-    setTimeout(() => t.classList.add('sosialt-toast--out'), 1400);
-    setTimeout(() => t.remove(), 1800);
-  }
-
   wrap.innerHTML = '';
+  wrap.hidden = true;
+  wrap.classList.add('event-detail__secondary-actions--empty');
+
   const state = getPublicEventState(id);
 
-  if (state === 'private_plan') {
-    const chatBtn = document.createElement('button');
-    chatBtn.type = 'button';
-    chatBtn.className = 'event-detail__ghost-icon';
-    chatBtn.setAttribute('aria-label', 'Open group chat');
-    chatBtn.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 15A2 2 0 0 1 19 17H7L3 21V5A2 2 0 0 1 5 3H19A2 2 0 0 1 21 5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      <span>Chat</span>
-    `;
-    chatBtn.addEventListener('click', () => {
-      window.location.hash = `#/event/${id}/chat?private=1`;
-    });
-    wrap.appendChild(chatBtn);
-  } else {
-    const calBtn = document.createElement('button');
-    calBtn.type = 'button';
-    calBtn.className = 'event-detail__ghost-icon';
-    calBtn.setAttribute('aria-label', 'Add to calendar');
-    calBtn.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 10H21M8 3V7M16 3V7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span>Calendar</span>
-    `;
-    calBtn.addEventListener('click', () => {
-      openSaveToCalendarSheet({
-        onConfirm: () => {
-          downloadICSForEvents([{ ...event, id }]);
-          toast('Calendar file ready.');
-        },
-      });
-    });
-    wrap.appendChild(calBtn);
-  }
+  if (state !== 'private_plan') return;
 
-  const shareBtn = document.createElement('button');
-  shareBtn.type = 'button';
-  shareBtn.className = 'event-detail__ghost-icon';
-  shareBtn.setAttribute('aria-label', 'Share');
-  shareBtn.innerHTML = `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 6L12 2L8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-    <span>Share</span>
+  wrap.hidden = false;
+  wrap.classList.remove('event-detail__secondary-actions--empty');
+
+  const chatBtn = document.createElement('button');
+  chatBtn.type = 'button';
+  chatBtn.className = 'event-detail__ghost-icon';
+  chatBtn.setAttribute('aria-label', 'Open group chat');
+  chatBtn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 15A2 2 0 0 1 19 17H7L3 21V5A2 2 0 0 1 5 3H19A2 2 0 0 1 21 5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    <span>Chat</span>
   `;
-  shareBtn.addEventListener('click', () => {
-    toast('Share sheet (prototype)');
+  chatBtn.addEventListener('click', () => {
+    window.location.hash = `#/event/${id}/chat?private=1`;
   });
-  wrap.appendChild(shareBtn);
+  wrap.appendChild(chatBtn);
 }
 
 // REVIEW (Workshop 8): per-attendee thumbs icon dropped. We now show a
@@ -144,6 +109,7 @@ const EVENTS = {
     tag: 'Music',
     publicSource: true,
     socialProofVariant: 'solo',
+    friendAlsoGoing: 'Maya',
   },
   'sunday-coffee': {
     title: 'Sunday coffee chat',
@@ -156,6 +122,7 @@ const EVENTS = {
     going: 12,
     tag: 'Social',
     publicSource: true,
+    friendAlsoGoing: 'Leo',
   },
   'sunset-walk': {
     title: 'Sunset Beach Walk',
@@ -168,6 +135,7 @@ const EVENTS = {
     going: 9,
     tag: 'Outdoor',
     publicSource: true,
+    friendAlsoGoing: 'Ana',
   },
   // REVIEW (Workshop 7): richer public feed (~10 swipeable items) so the
   // initial browse never feels thin. None of these add social-proof counts
@@ -183,6 +151,7 @@ const EVENTS = {
     going: 38,
     tag: 'Food',
     publicSource: true,
+    friendAlsoGoing: 'Eleanor',
   },
   'sognsvann-ski': {
     title: 'Sognsvann ski loop',
@@ -195,6 +164,7 @@ const EVENTS = {
     going: 14,
     tag: 'Outdoor',
     publicSource: true,
+    friendAlsoGoing: 'Jonas',
   },
   'frogner-running-club': {
     title: 'Frogner running club',
@@ -207,6 +177,7 @@ const EVENTS = {
     going: 22,
     tag: 'Outdoor',
     publicSource: true,
+    friendAlsoGoing: 'Nora',
   },
   'munch-after-hours': {
     title: 'Munch after hours',
@@ -219,6 +190,7 @@ const EVENTS = {
     going: 31,
     tag: 'Culture',
     publicSource: true,
+    friendAlsoGoing: 'Erik',
   },
   'mathallen-board-games': {
     title: 'Board game night at Mathallen',
@@ -231,6 +203,7 @@ const EVENTS = {
     going: 18,
     tag: 'Social',
     publicSource: true,
+    friendAlsoGoing: 'Cecily',
   },
   'oslo-fjord-sauna': {
     title: 'Floating sauna at Sørenga',
@@ -243,6 +216,7 @@ const EVENTS = {
     going: 12,
     tag: 'Wellness',
     publicSource: true,
+    friendAlsoGoing: 'Signe',
   },
   'opera-rooftop-yoga': {
     title: 'Rooftop yoga at the Opera',
@@ -255,6 +229,7 @@ const EVENTS = {
     going: 24,
     tag: 'Wellness',
     publicSource: true,
+    friendAlsoGoing: 'Ingrid',
   },
 };
 

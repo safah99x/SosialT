@@ -25,6 +25,12 @@ import { renderProfileEdit } from './screens/profileEdit.js';
 import { renderNotifSettings } from './screens/notifSettings.js';
 // REVIEW (Workshop 7)
 import { renderFeedback } from './screens/feedback.js';
+import {
+  renderCalendarSyncExplain,
+  renderPingVisibility,
+  renderBlockedList,
+  renderYourData,
+} from './screens/profileMore.js';
 import { renderInterestsQuiz } from './screens/onboarding/interests.js';
 import { renderPreferencesQuizNudge } from './screens/preferencesQuizNudge.js';
 // REVIEW
@@ -102,6 +108,10 @@ const staticRoutes = {
   '/profile/notifications': (c) => renderNotifSettings(c),
   // REVIEW (Workshop 7): stable Settings feedback area.
   '/profile/feedback':      (c) => renderFeedback(c),
+  '/profile/calendar-sync': (c) => renderCalendarSyncExplain(c),
+  '/profile/ping-visibility': (c) => renderPingVisibility(c),
+  '/profile/blocked':       (c) => renderBlockedList(c),
+  '/profile/your-data':     (c) => renderYourData(c),
   '/preferences/quiz-nudge': (c) => renderPreferencesQuizNudge(c),
   '/invite/declined':        (c, params) => renderInviteDeclined(c, { params }),
 
