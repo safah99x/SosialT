@@ -55,7 +55,6 @@ export function renderChats(container) {
   head.innerHTML = `
     <div class="chats-head__text">
       <h1 class="chats-head__title">Chats</h1>
-      <p class="chats-head__sub">One thread per plan. Side-quests welcome.</p>
     </div>
     <div class="chats-head__actions">
       <button type="button" class="chats-head__new" id="chats-new" aria-label="New chat" title="New chat">
