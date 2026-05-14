@@ -15,7 +15,7 @@ import { createTopBar } from '../components/topBar.js';
 import { mountBottomNav } from '../components/bottomNav.js';
 import { getHeroLine, getHomeContext } from '../lib/dynamicCopy.js';
 // REVIEW: read onboarding session for new-user state
-import { getSession } from '../lib/session.js';
+import { getSession, setReferral } from '../lib/session.js';
 import { listSavedEventIds, hasBranchedFromPublic, getPublicEventState } from '../lib/publicEventState.js';
 import { getEvent, getRsvpCounts } from './eventDetail.js';
 import { createHomeNearbyThumbPair } from './publicEventEngage.js';
@@ -84,6 +84,16 @@ export async function renderHome(container) {
   }
 
   const isNewUser = params.get('newuser') === '1';
+  /** Demo: ?newuser=1&entry=friend&label=Eleanor seeds referral without full onboarding */
+  const entry = params.get('entry');
+  const entryLabel = params.get('label');
+  if (isNewUser && entry && ['friend', 'circle', 'event', 'cold'].includes(entry)) {
+    setReferral({
+      source: entry,
+      label: entryLabel ? decodeURIComponent(entryLabel) : null,
+      id: null,
+    });
+  }
   /** Full layout duplicates Quick ping / Create event in the hero actions + empty state — use ?legacy=1 to restore for pitch decks. */
   const newUserLegacyLayout = params.get('legacy') === '1';
   const displayName = (session.name || USER.name).split(' ')[0];
@@ -104,7 +114,7 @@ export async function renderHome(container) {
       : `<span class="hero-card__chip">${chipLabel(ctx, upcomingToday)}</span>`;
 
   const screen = document.createElement('div');
-  screen.className = 'screen home-screen';
+  screen.className = `screen home-screen${isNewUser ? ' home-screen--newuser' : ''}`;
 
   // 1. Top bar
   screen.appendChild(createTopBar({
@@ -113,6 +123,10 @@ export async function renderHome(container) {
     onCalendar:      () => { window.location.hash = '#/calendar'; },
     onProfile:       () => { window.location.hash = '#/profile'; },
   }));
+
+  if (isNewUser) {
+    screen.appendChild(buildNewUserEntryStrip(referral));
+  }
 
   // 2. Greeting
   const greeting = document.createElement('div');
@@ -296,6 +310,40 @@ export async function renderHome(container) {
 
   // Quiz re-prompt is handled by /preferences/quiz-nudge + proto activity counts
   // (see protoActivity.js) — no modal overlay on Home anymore.
+}
+
+function buildNewUserEntryStrip(referral) {
+  const src = referral?.source || 'cold';
+  const label = referral?.label;
+  const cfg = {
+    cold: {
+      kicker: 'Cold start',
+      line: 'No invite link — you found us on your own.',
+    },
+    friend: {
+      kicker: 'Friend link',
+      line: label ? `You came in with ${label}.` : 'You opened a friend’s invite link.',
+    },
+    circle: {
+      kicker: 'Circle',
+      line: label ? `You’re tied to ${label}.` : 'You followed a circle invite.',
+    },
+    event: {
+      kicker: 'Event',
+      line: label ? `You were looking at · ${label}` : 'You followed an event invite.',
+    },
+  };
+  const c = cfg[src] || cfg.cold;
+  const strip = document.createElement('div');
+  strip.className = `home-entry-strip home-entry-strip--${src}`;
+  strip.innerHTML = `
+    <span class="home-entry-strip__accent" aria-hidden="true"></span>
+    <div class="home-entry-strip__text">
+      <span class="home-entry-strip__kicker">${c.kicker}</span>
+      <p class="home-entry-strip__line">${c.line}</p>
+    </div>
+  `;
+  return strip;
 }
 
 function newUserChip(referral) {

@@ -1,6 +1,7 @@
 // REVIEW: "Received a friend invite link" landing screen — an invitee opening
 // a deep link is greeted with the inviter's profile and a single tap to accept.
 import { goBack } from '../../lib/nav.js';
+import { setReferral } from '../../lib/session.js';
 
 const FRIENDS = {
   eleanor:  { name: 'Eleanor Whitfield',  initial: 'E', color: '#C49E7A', bio: 'Coffee, books, and long walks.' },
@@ -52,10 +53,11 @@ export function renderFriendInvite(container, { id }) {
 
   screen.querySelector('#il-back').addEventListener('click', () => goBack('#/'));
   screen.querySelector('#il-accept').addEventListener('click', () => {
+    setReferral({ source: 'friend', id, label: friend.name });
     window.location.hash = '#/onboarding/phone';
   });
   screen.querySelector('#il-decline').addEventListener('click', () => {
-    window.location.hash = '#/invite/declined?kind=friend';
+    window.location.hash = '#/invite/declined?kind=friend&label=' + encodeURIComponent(friend.name);
   });
 
   container.appendChild(screen);

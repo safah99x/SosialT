@@ -6861,7 +6861,7 @@
   padding: 28px 22px 36px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 .invite-decline__title {
   font-family: var(--font-heading);
@@ -6878,6 +6878,22 @@
   color: var(--color-text-secondary);
 }
 .invite-decline__cta { width: 100%; }
+.invite-decline__outline {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid rgba(44, 40, 37, 0.15);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.invite-decline__outline:hover {
+  border-color: rgba(232, 197, 71, 0.55);
+  background: var(--color-accent-bg);
+}
 .invite-decline__ghost {
   align-self: center;
   padding: 8px 12px;

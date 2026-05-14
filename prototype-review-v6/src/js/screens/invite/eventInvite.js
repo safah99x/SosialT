@@ -1,6 +1,7 @@
 // REVIEW: "Received an event invite link" landing screen.
 import { getEvent } from '../eventDetail.js';
 import { goBack } from '../../lib/nav.js';
+import { setReferral } from '../../lib/session.js';
 
 export function renderEventInvite(container, { id }) {
   const event = getEvent(id) || getEvent('jazz-vigeland');
@@ -43,10 +44,11 @@ export function renderEventInvite(container, { id }) {
 
   screen.querySelector('#ile-back').addEventListener('click', () => goBack('#/'));
   screen.querySelector('#ile-accept').addEventListener('click', () => {
+    setReferral({ source: 'event', id, label: event.title });
     window.location.hash = `#/event/${id}`;
   });
   screen.querySelector('#ile-decline').addEventListener('click', () => {
-    window.location.hash = '#/invite/declined?kind=event';
+    window.location.hash = '#/invite/declined?kind=event&label=' + encodeURIComponent(event.title);
   });
 
   container.appendChild(screen);

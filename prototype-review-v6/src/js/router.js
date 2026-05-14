@@ -122,7 +122,7 @@ const staticRoutes = {
   '/onboarding/phone':           (c) => renderPhone(c),
   '/onboarding/code':            (c) => renderCode(c),
   '/onboarding/name':            (c) => renderName(c),
-  '/onboarding/contacts':        (c) => renderContacts(c),
+  '/onboarding/contacts':        (c, params) => renderContacts(c, { params }),
   // REVIEW (Workshop 7): optional lightweight interests quiz, skippable.
   '/onboarding/interests':       (c) => renderInterestsQuiz(c),
 };

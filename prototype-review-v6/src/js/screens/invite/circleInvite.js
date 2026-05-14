@@ -2,6 +2,7 @@
  * "Received a circle invite link" landing — mirror of friend invite UX.
  */
 import { goBack } from '../../lib/nav.js';
+import { setReferral } from '../../lib/session.js';
 
 const CIRCLES = {
   'inner-circle': { name: 'Inner Circle', members: 6, blurb: 'Your Sunday plans & family-style hangouts.', tone: '#C49E7A' },
@@ -42,10 +43,11 @@ export function renderCircleInvite(container, { id }) {
 
   screen.querySelector('#ic-back').addEventListener('click', () => goBack('#/'));
   screen.querySelector('#ic-accept').addEventListener('click', () => {
+    setReferral({ source: 'circle', id, label: circle.name });
     window.location.hash = '#/onboarding/phone';
   });
   screen.querySelector('#ic-decline').addEventListener('click', () => {
-    window.location.hash = '#/invite/declined?kind=circle';
+    window.location.hash = '#/invite/declined?kind=circle&label=' + encodeURIComponent(circle.name);
   });
 
   container.appendChild(screen);
