@@ -23,9 +23,11 @@ trivial to find and remove.
 
 ## Demo URLs
 
-**Primary (this repo’s default `vercel deploy`):** **`https://sosialt-review-v2.vercel.app`**  
+**This build (v7) — production:** **`https://prototype-review-v7.vercel.app`**
 
-**Legacy / pinned:** **`https://sosialt-review.vercel.app`**
+Deploy from this folder with `npx vercel deploy --prod` (links to Vercel project **`prototype-review-v7`**).
+
+Other review hosts in the org (older iterations): **`https://sosialt-review-v2.vercel.app`**, **`https://sosialt-review.vercel.app`**, **`https://prototype-review-v6.vercel.app`** (v6 codebase).
 
 Rollback either project in Vercel → that project → **Deployments** → **Promote to Production**.
 - `/#/`                  Home (returning user, full upcoming)
